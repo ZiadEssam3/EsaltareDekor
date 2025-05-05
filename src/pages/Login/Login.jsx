@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, } from 'lucide-react';
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF } from "react-icons/fa";
 import Input from "../../components/Input/Input";
@@ -13,8 +13,10 @@ import { Auth_Logo } from '../../assets/assets';
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const { login, isLoading, error } = useAuthStore();
     const navigate = useNavigate();
+
     const handleLogin = async (e) => {
         e.preventDefault();
         // Check for empty fields
@@ -48,13 +50,19 @@ const LoginPage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 {/* Password Input */}
-                <Input
-                    icon={Lock}
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="password-input-container">
+                    <Input
+                        icon={Lock}
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {/* Eye Icon for showing/hiding password */}
+                    <div className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <EyeOff /> : <Eye />}
+                    </div>
+                </div>
                 <div className="login-options">
                     <label className="remember-me">
                         <input type="checkbox" />

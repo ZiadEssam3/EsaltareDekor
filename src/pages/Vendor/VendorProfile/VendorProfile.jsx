@@ -2,6 +2,7 @@ import React from 'react'
 import './VendorProfile.css'
 import VendorNavbar from '../../../components/VendorNavbar/VendorNavbar';
 import Footer from '../../../components/Footer/Footer';
+import { Link } from 'react-router-dom';
 const VendorProfile = () => {
     return (
         <>
@@ -47,7 +48,10 @@ const VendorProfile = () => {
 
                 <div className="package-section">
                     <div className="package-header">
-                        <h2>MyPackage ▶</h2>
+                        <Link to='/vendorhome' className='vendor-console-package'>
+                            <h2>MyPackage ▶</h2>
+                        </Link>
+
                     </div>
                 </div>
 

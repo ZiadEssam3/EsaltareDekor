@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Lock, User } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'; // Import the Eye and EyeOff icons
 import Input from "../../components/Input/Input";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -14,8 +14,11 @@ const SignupPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // Track password visibility
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Track confirm password visibility
     const { signup, error, isLoading } = useAuthStore();
     const navigate = useNavigate();
+
     const handleSignUp = async (e) => {
         e.preventDefault();
         if (!username || !email || !password || !confirmPassword) {
@@ -27,9 +30,9 @@ const SignupPage = () => {
             return;
         }
         try {
-            await signup(email, password, username); 
+            await signup(email, password, username);
             toast.success('Signup successful! Please verify your email.');
-            navigate("/login"); 
+            navigate("/login");
         } catch (error) {
             console.error("Signup error:", error);
             toast.error(error.message || 'Signup failed! Please try again.');
@@ -57,20 +60,30 @@ const SignupPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <Input
-                    icon={Lock}
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <Input
-                    icon={Lock}
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                <div className="password-input-container">
+                    <Input
+                        icon={Lock}
+                        type={showPassword ? "text" : "password"} // Toggle password visibility
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <div className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <EyeOff /> : <Eye />} {/* Toggle Eye icon */}
+                    </div>
+                </div>
+                <div className="password-input-container">
+                    <Input
+                        icon={Lock}
+                        type={showConfirmPassword ? "text" : "password"} // Toggle confirm password visibility
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <div className="toggle-password" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                        {showConfirmPassword ? <EyeOff /> : <Eye />} {/* Toggle Eye icon */}
+                    </div>
+                </div>
                 {password !== confirmPassword && confirmPassword.length > 0 && (
                     <p className="ED-error-text">Passwords do not match!</p>
                 )}

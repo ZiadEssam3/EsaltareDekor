@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';  // Use `useNavigate` here
 import { toggleStatusTab, setCartFromStorage } from '../../stores/cart';
 import { toggleStatusTabFav, setFavFromStorage } from '../../stores/favourite';
+import { IoStorefront } from "react-icons/io5";
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -118,6 +119,12 @@ const Navbar = () => {
                     <li className='ED-Navbar-ul-li'>
                         <FaRegUserCircle size={20} />
                         My Account
+                    </li>
+                </Link>
+                <Link to='/vendorhome' className='ED-myprofile'>
+                    <li className='ED-Navbar-ul-li'>
+                        <IoStorefront size={20} />
+                        Join as Vendor
                     </li>
                 </Link>
 

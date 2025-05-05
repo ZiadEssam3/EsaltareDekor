@@ -10,7 +10,7 @@ import { addToCompare } from '../../stores/product';
 import { toast } from 'react-toastify';
 import { color } from 'framer-motion';
 
-const ProductCard2 = ({ id, image, title, originalprice, discount, slug, rating, onClick }) => {
+const ProductCard2 = ({ id, image, title, originalprice, category, description, discount, slug, rating, onClick }) => {
     const carts = useSelector(store => store.cart.items);
     const favorites = useSelector(store => store.favorites.favorites);
     const compareList = useSelector(store => store.products.compare);
@@ -41,15 +41,17 @@ const ProductCard2 = ({ id, image, title, originalprice, discount, slug, rating,
     };
 
     const handleAddToCompare = () => {
-        console.log("Adding to compare", { id, image, title, price, rating, slug });
+        console.log("Adding to compare", { id, image, title, originalprice, rating, slug });
         try {
             dispatch(addToCompare({
                 id,
                 image,
                 title,
-                price,
+                originalprice,
                 rating,
-                slug
+                slug,
+                category,
+                description
             }));
             toast.success(`${title} added to comparison! ⚖️`);
         } catch (error) {

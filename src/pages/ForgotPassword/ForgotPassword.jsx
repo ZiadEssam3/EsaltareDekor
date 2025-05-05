@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './ForgotPassword.css';
 import { useAuthStore } from '../../stores/authStore';
 import { toast } from 'react-toastify';
+import { Auth_Logo } from '../../assets/assets';
 
 function ForgotPassword() {
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -21,6 +22,9 @@ function ForgotPassword() {
 
     return (
         <div className="forgot-password-container">
+            <div className='ED-Top-logo-item'>
+                <img src={Auth_Logo.AuthLogo} alt="Authlogo" className="Authlogo" />
+            </div>
             <h2 className="forgot-password-title">Forgot Password</h2>
             <p className="forgot-password-instruction">Please enter your email to reset the password</p>
             <div className="input-container">

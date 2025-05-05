@@ -134,3 +134,10 @@
     border-radius: 10px;
     cursor: pointer;
 }
+
+
+@media (max-width: 488px) {
+    .checkout-container {
+        display: block;
+    }
+}

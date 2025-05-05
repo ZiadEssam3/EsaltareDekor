@@ -30,6 +30,7 @@ const TopNavbar = () => {
                     <li><Link to="/categories">Categories</Link></li>
                     <li><Link to="/contact">ContactUs</Link></li>
                     <li><Link to="/designer">3D Designer</Link></li>
+                    <li><Link to="/compare">Compare</Link></li>
                 </ul>
             </div>
         </>

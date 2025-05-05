@@ -25,6 +25,7 @@ import VendorProduct from './pages/Vendor/VendorProduct/VendorProduct';
 import About from './pages/AboutUs/AboutUs';
 import ContactUs from './pages/ContactUs/ContactUs';
 import DesignerPage from './pages/DesignerPage/DesignerPage';
+import SetNewPassword from './pages/SetNewPassword/SetNewPassword';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/setnewpassword" element={<SetNewPassword />} />
         <Route path="/myprofile" element={<UserProfile />} />
         <Route path="/vendorhome" element={<VendorHome />} />
         <Route path="/vendorprofile" element={<VendorProfile />} />

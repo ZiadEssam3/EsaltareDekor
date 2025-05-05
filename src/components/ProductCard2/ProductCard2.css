@@ -99,3 +99,10 @@
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+
+@media (max-width: 488px) {
+    .ED-product-2-card  {
+        margin-bottom: 10px;
+    }
+}

@@ -25,7 +25,7 @@ const Home = () => {
         const loadNewArrivals = async () => {
             try {
                 const data = await fetchNewArrivalsData();
-                setNewArrivals(data); 
+                setNewArrivals(data);
             } catch (error) {
                 console.error('Failed to load new arrivals', error);
             }
@@ -133,6 +133,8 @@ const Home = () => {
                                 discount={product.discount}
                                 slug={product.slug}
                                 rating={product.rating}
+                                category={product.category}
+                                description={product.description}
                             />
                         ))}
                     </div>

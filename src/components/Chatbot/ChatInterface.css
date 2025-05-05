@@ -49,3 +49,11 @@
     color: var(--secondarycolor);
     border: 1px solid var(--secondarycolor);
 }
+
+
+@media (max-width: 488px) {
+    .chat-window {
+        width: 326px;
+    }
+
+}

@@ -3,10 +3,18 @@ import VendorNavbar from '../../../components/VendorNavbar/VendorNavbar';
 import Footer from '../../../components/Footer/Footer';
 import PackageCard from '../../../components/VendorPackage/VendorPackage';
 import './VendorHome.css';
+import { assets } from '../../../assets/assets';
 const VendorHome = () => {
     return (
         <div>
             <VendorNavbar />
+            <div className='ED-Vendor-console-logo'>
+                <img src={assets.ED_logo} alt="ED Logo" />
+            </div>
+            <h1 className='ED-Vendor-console-title'>
+                Welcome to Esaltare Deckor Console Packages
+                Please Select A Package To Subscribe
+            </h1>
             <div className='Vendor-package-display'>
                 <PackageCard
                     title="basic pakage"

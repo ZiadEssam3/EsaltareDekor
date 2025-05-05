@@ -158,3 +158,21 @@
     width: 99%;
     margin-bottom: 20px;
 }
+
+.password-input-container {
+    position: relative;
+    align-items: center;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+}
+
+.toggle-password svg {
+    margin-bottom: 20px;
+}
