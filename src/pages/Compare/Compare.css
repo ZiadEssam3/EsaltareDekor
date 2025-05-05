@@ -1,0 +1,181 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+/* Wrapper */
+.compare-wrapper {
+    margin: 0 auto;
+    padding: 50px 20px;
+    max-width: 1200px;
+}
+
+/* Header */
+.compare-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.compare-header h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
+
+.btn-clear {
+    background-color: #FF4747;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-clear:hover {
+    background-color: #e63946;
+}
+
+/* Compare Table */
+.compare-table {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.compare-row {
+    display: grid;
+    grid-template-columns: 1fr repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    align-items: center;
+}
+
+.compare-row:last-child {
+    border-bottom: none;
+}
+
+.compare-attribute {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    text-align: center;
+}
+
+.compare-value {
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+}
+
+.compare-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Buttons */
+.btn-remove {
+    background-color: #FF4747;
+    color: #fff;
+    padding: 8px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.btn-remove:hover {
+    background-color: #e63946;
+}
+
+.btn-view {
+    background-color: #28a745;
+    color: #fff;
+    padding: 8px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-view:hover {
+    background-color: #218838;
+}
+
+/* Empty State */
+.compare-empty {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+    padding: 50px 0;
+}
+
+/* Footer */
+footer {
+    margin-top: 50px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .compare-table {
+        grid-template-columns: 1fr repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .compare-table {
+        grid-template-columns: 1fr repeat(2, 1fr);
+    }
+
+    .compare-header h2 {
+        font-size: 24px;
+    }
+
+    .compare-attribute {
+        font-size: 14px;
+    }
+
+    .compare-value {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .compare-table {
+        grid-template-columns: 1fr;
+    }
+
+    .compare-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .btn-clear {
+        width: 100%;
+        margin-top: 20px;
+    }
+}

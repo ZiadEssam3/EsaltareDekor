@@ -1,0 +1,160 @@
+.login-container {
+    max-width: 60%;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 50px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 50%;
+    margin-left: 199px;
+}
+
+.login-title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.input-container {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #bbb;
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+    border-color: var(--secondarycolor);
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.remember-me {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.forgot-password-link {
+    font-size: 0.9rem;
+    color: var(--secondarycolor);
+    text-decoration: none;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+.error-text {
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.login-button {
+    width: 100%;
+    padding: 0.8rem;
+    background: var(--secondarycolor);
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.google-button {
+    background: #f1f1f1;
+}
+
+.google-button:hover {
+    background: #eaeaea;
+}
+
+.facebook-button {
+    background: #4267B2;
+    color: #fff;
+}
+
+.facebook-button:hover {
+    background: #365899;
+}
+
+.social-icon {
+    font-size: 1.5rem;
+}
+
+.sign-up-text {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.sign-up-link {
+    color: var(--secondarycolor);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.sign-up-link:hover {
+    text-decoration: underline;
+}
+
+.ED-login-title-h {
+    font-size: 1rem;
+    text-align: center;
+    color: var(--secondarycolor);
+}
+
+.Authlogo {
+    width: 99%;
+    margin-bottom: 20px;
+}

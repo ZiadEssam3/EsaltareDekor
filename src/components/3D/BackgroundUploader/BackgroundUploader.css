@@ -1,0 +1,70 @@
+.background-uploader {
+    padding: 20px;
+    border: 1px solid #ddd;
+    max-width: 270px;
+    border-radius: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    background-color: #fff;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.Updload_3D-Image {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.upload-area {
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.upload-area.active {
+    background-color: #f0f8ff;
+}
+
+.file-input {
+    display: none;
+}
+
+.preview-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.preview-container img {
+    max-width: 100%;
+    max-height: 300px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.remove-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-btn:hover {
+    background-color: #d9363e;
+}
+
+.controls-container h3 {
+    font-size: 18px;
+}

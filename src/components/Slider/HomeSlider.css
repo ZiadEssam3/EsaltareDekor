@@ -1,0 +1,26 @@
+.ED-slider-container {
+    width: 100%;
+    position: relative;
+}
+
+.ED-slider-slide {
+    padding: 10px;
+}
+
+.ED-slider-img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.custom-arrow {
+    z-index: 10;
+}
+
+.next-arrow {
+    right: 10px;
+}
+
+.prev-arrow {
+    left: 10px;
+}

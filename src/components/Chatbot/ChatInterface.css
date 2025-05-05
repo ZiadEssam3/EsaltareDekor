@@ -1,0 +1,51 @@
+.chat-toggle-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--secondarycolor);
+    color: #fff;
+}
+
+.chat-window {
+    width: 400px;
+    height: 700px;
+}
+
+.chat-bot-icon,
+.chat-user-icon {
+    font-size: 1.5rem;
+    color: #6c757d;
+}
+
+.chat-bubble-bot {
+    background-color: #f8f9fa;
+}
+
+.chat-bubble-user {
+    background-color: var(--secondarycolor);
+    color: #fff;
+}
+
+.chat-textarea {
+    border: 1px solid var(--secondarycolor);
+    height: 50px;
+    resize: none;
+}
+
+.chat-send-btn {
+    background-color: var(--secondarycolor);
+    color: #fff;
+    padding: 12px;
+}
+
+.quick-replies {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ED-btn-co {
+    color: var(--secondarycolor);
+    border: 1px solid var(--secondarycolor);
+}

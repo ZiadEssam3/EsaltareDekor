@@ -1,0 +1,24 @@
+.Vendor-package-display {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 38px;
+}
+
+@media (max-width:768px) {
+    .Vendor-package-display {
+        padding: 27px;
+    }
+}
+
+@media (max-width:488px) {
+    .Vendor-package-display {
+        display: block;
+        padding: 35px;
+    }
+
+    .account span {
+        font-size: 10px;
+    }
+
+}

@@ -1,0 +1,89 @@
+.topnavbar {
+    background-color: var(--firstcolor);
+}
+
+.topnavbar-content {
+    text-align: center;
+    color: var(--whitecolor);
+    font-size: 16px;
+}
+
+.topnavbar-content-para {
+    padding: 0;
+    margin: 0;
+}
+
+.topnavbar-content .topnavbar-code {
+    color: var(--goldcolor);
+}
+
+.topnavbar-content .topnavbar-percentage-icon {
+    color: var(--goldcolor);
+    place-items: center;
+}
+
+.ED-Home-page-links {
+    background-color: #f5f5f5;
+    /* light background */
+    padding: 15px 30px;
+}
+
+.ED-Home-page-links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    /* center the links horizontally */
+    align-items: center;
+}
+
+.ED-Home-page-links li {
+    display: inline-block;
+}
+
+.ED-Home-page-links a {
+    text-decoration: none;
+    color: #1e294c;
+    /* dark navy color */
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    padding-bottom: 3px;
+    position: relative;
+}
+
+.ED-Home-page-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--secondarycolor);
+    transition: width 0.3s ease;
+}
+
+.ED-Home-page-links a:hover {
+    color: var(--secondarycolor);
+    /* darker shade on hover */
+}
+
+.ED-Home-page-links a:hover::after {
+    width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .topnavbar-content {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topnavbar-content {
+        font-size: 12px;
+        padding: 0 10px;
+    }
+}

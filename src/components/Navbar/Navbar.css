@@ -1,0 +1,238 @@
+/* General Navbar Styles */
+.ED-Navbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--maincolor);
+    padding: 15px 7%;
+    gap: 40px;
+    position: relative;
+}
+
+/* Logo */
+.ED-logo {
+    width: 140px;
+    cursor: pointer;
+}
+
+/* Search Box */
+.ED-search-box {
+    display: flex;
+    align-items: center;
+    background: var(--whitecolor);
+    padding: 4px 15px;
+    border-radius: 30px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.ED-search-box input {
+    padding: 6px;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: var(--graycolor);
+    font-size: 16px;
+    width: 100%;
+}
+
+/* Navbar List */
+.ED-Navbar-ul {
+    flex: 1;
+    list-style: none;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.ED-Navbar-ul .ED-Navbar-ul-li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Cart Item Count */
+.cart-icon {
+    position: relative;
+}
+
+.ED-cart-count {
+    position: absolute;
+    top: -1px;
+    right: 87px;
+    background: var(--blackcolor);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.ED-fav-count {
+    position: absolute;
+    top: -2px;
+    right: 116px;
+    background-color: var(--firstcolor);
+    color: white;
+    font-size: 12px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ED-myprofile {
+    color: #000;
+}
+
+.ED-myprofile li {
+    text-decoration: none;
+}
+
+/* Menu Toggle Button */
+.ED-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--blackcolor);
+}
+
+/* Navbar.css */
+.ED-search-box {
+    position: relative;
+}
+
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.search-results {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-results li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+.search-results li:hover {
+    background-color: #f4f4f4;
+}
+
+.no-results {
+    padding: 10px;
+    text-align: center;
+    color: #888;
+}
+
+
+
+
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ED-menu-toggle {
+        display: block;
+    }
+
+    .ED-Navbar-ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: var(--maincolor);
+        padding: 10px;
+        border-radius: 10px;
+        width: 200px;
+        border: 1px solid black;
+    }
+
+    .ED-Navbar-ul.open {
+        display: flex;
+        z-index: 1;
+    }
+
+    .ED-Navbar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .ED-search-box {
+        max-width: 300px;
+    }
+
+    .ED-cart-count {
+        right: 164px
+    }
+
+    .ED-fav-count {
+        top: -1px;
+        right: 166px;
+    }
+}
+
+@media (max-width: 488px) {
+    .ED-Navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px;
+    }
+
+    .ED-logo {
+        width: 120px;
+    }
+
+    .ED-search-box {
+        max-width: 250px;
+        padding: 4px 10px;
+    }
+
+    .ED-search-box input {
+        font-size: 14px;
+    }
+
+    .ED-Navbar-ul {
+        width: 150px;
+    }
+
+    .ED-Navbar-ul .ED-Navbar-ul-li {
+        font-size: 14px;
+    }
+
+    .ED-cart-count {
+        right: 116px
+    }
+
+    .ED-fav-count {
+        right: 117px;
+    }
+}

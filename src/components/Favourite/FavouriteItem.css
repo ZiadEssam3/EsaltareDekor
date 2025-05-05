@@ -1,0 +1,47 @@
+.fav-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #475569;
+    color: white;
+    padding: 10px;
+    border-bottom: 2px solid #334155;
+    border-radius: 8px;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.fav-item-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.fav-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.fav-item-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.fav-item-price {
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.fav-remove-btn {
+    background-color: #e11d48;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
