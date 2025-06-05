@@ -31,6 +31,7 @@ const TopNavbar = () => {
                     <li><Link to="/contact">ContactUs</Link></li>
                     <li><Link to="/designer">3D Designer</Link></li>
                     <li><Link to="/compare">Compare</Link></li>
+                    <li><Link to="/search">AllProducts</Link></li>
                 </ul>
             </div>
         </>

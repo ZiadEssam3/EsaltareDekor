@@ -11,7 +11,7 @@ import ProductCard2 from '../../components/ProductCard2/ProductCard2';
 
 const Category = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState(''); // Track selected category
+  const [selectedCategory, setSelectedCategory] = useState('');
   const productsPerPage = 6;
 
   const getDiscount = (original, current) => {
@@ -24,7 +24,7 @@ const Category = () => {
     ? ProductCategory.filter(product => product.category === selectedCategory)
     : ProductCategory;
 
-  // Pagination logic
+  // Pagination 
   const indexOfLast = currentPage * productsPerPage;
   const indexOfFirst = indexOfLast - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirst, indexOfLast);
@@ -38,7 +38,7 @@ const Category = () => {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    setCurrentPage(1); // Reset to first page on category change
+    setCurrentPage(1);
   };
 
   return (
@@ -51,7 +51,6 @@ const Category = () => {
 
       <CategoryMenu onCategorySelect={handleCategorySelect} />
       {/* Pass category select handler */}
-
       <div className='ED-category-menu-products'>
         {currentProducts.length > 0 ? (
           currentProducts.map((product, i) => (
@@ -67,7 +66,7 @@ const Category = () => {
             />
           ))
         ) : (
-          <h2 className='ED-No-Product'>No products found in this category</h2> // Message if no products found
+          <h2 className='ED-No-Product'>No products found in this category</h2> 
         )}
       </div>
 

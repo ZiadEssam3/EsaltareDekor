@@ -1,6 +1,5 @@
-// ErrorPage.jsx
 import React from 'react';
-import { FaExclamationTriangle } from 'react-icons/fa'; // Importing an exclamation icon
+import { FaExclamationTriangle } from 'react-icons/fa';
 import './Error.css';
 
 const ErrorPage = () => {

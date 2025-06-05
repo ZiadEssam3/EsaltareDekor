@@ -5,7 +5,7 @@ import { changeQuantity } from '../../stores/cart';
 import { FaTrash } from 'react-icons/fa';
 import { NewArrivals } from '../../assets/assets';
 import Footer from '../../components/Footer/Footer';
-
+import { loadStripe } from '@stripe/stripe-js';
 const Checkout = () => {
     const cartItems = useSelector(state => state.cart.items);
     const dispatch = useDispatch();
@@ -26,7 +26,42 @@ const Checkout = () => {
 
         dispatch(changeQuantity({ productId, quantity: newQuantity }));
     };
-
+    console.log(cartItems);
+    const makePayment = async () => {
+        const stripe = await loadStripe("pk_test_51QSjjVBbQbdCEIO0UiBSNLaIsI1pCh5j086JByiPwd5LWuZIrot56GLoUprFEyEdh84vXiuD3fu75VTLVf8tP41B00t3QpyzuL")
+        const products = cartItems.map(item => {
+            const product = NewArrivals.find(p => p.id === item.productId);
+            return {
+                name: product?.title || "Unknown",
+                image: product?.image || "",
+                price: product?.price || 0,
+                quantity: item.quantity,
+            };
+        });
+    
+        const response = await fetch("http://localhost:3000/api/create-checkout-session", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ products }),
+        });
+    
+        const session = await response.json();
+    
+        if (!stripe || !session.id) {
+            console.error("Stripe or session is missing:", session);
+            return;
+        }
+    
+        const result = await stripe.redirectToCheckout({
+            sessionId: session.id,
+        });
+    
+        if (result.error) {
+            console.log(result.error.message);
+        }
+    }
     return (
         <>
             <div className='Check-out-top'>
@@ -73,7 +108,12 @@ const Checkout = () => {
                         <hr />
                         <p><strong>Grand Total</strong><strong>fairy {(total - 50).toLocaleString()}.00</strong></p>
                     </div>
-                    <button className="checkout-btn-ck">Continue Your Purchase</button>
+                    <button
+                        className="checkout-btn-ck"
+                        onClick={makePayment}
+                    >
+                        Continue Your Purchase
+                    </button>
                 </div>
             </div>
 

@@ -62,7 +62,7 @@ const Home = () => {
             <Navbar />
             <BottomNavBar />
             <div className="container py-4">
-                {/* Top row: Slider + Sale Image */}
+                {/* Top row: Slider and Sale Image */}
                 <div className="row align-items-center">
                     <div className="col-md-8">
                         <HomeSlider images={ads.slider || []} />
@@ -72,7 +72,6 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* Middle row: 4 images */}
                 <div className="row mt-3">
                     <div className="col-6 col-md-3">
                         <img src={Deals.Deal1} alt="Item 1" className="img-fluid rounded" />
@@ -88,7 +87,6 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* Bottom row: Full-width banner */}
                 <div className="row mt-4">
                     <div className="col">
                         <img src={ads.banner[0].image} alt="Furniture Sale Banner" className="ED-Banner-sale rounded" />

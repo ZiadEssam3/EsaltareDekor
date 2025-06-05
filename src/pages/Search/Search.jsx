@@ -1,19 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
 import './Search.css';
 import Footer from '../../components/Footer/Footer';
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import Navbar from '../../components/Navbar/Navbar';
 import BottomNavBar from '../../components/BottomNavbar/BottomNavbar';
 import ProductCard2 from '../../components/ProductCard2/ProductCard2';
-import { NewArrivals } from '../../assets/assets';
 
 const Search = () => {
-    const [sortOption, setSortOption] = useState('Price: High to Low');
-    const [selectedColors, setSelectedColors] = useState(['Black', 'Gold', 'Yellow', 'Pink']);
-    const [selectedCategories, setSelectedCategories] = useState(['Corner sofa', 'best seller', 'Sofa bed']);
+    const [products, setProducts] = useState([]);
+    const [sortOption, setSortOption] = useState('Price: Low to High');
+    const [selectedColors, setSelectedColors] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState([0, 50000]);
-    console.log(NewArrivals);
-    
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/products')
+            .then(response => {
+                setProducts(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching products:', error);
+            });
+    }, []);
+
+    const filteredProducts = useMemo(() => {
+        return products
+            .filter(product => {
+                if (selectedColors.length > 0) {
+                    if (product.color) {
+                        if (Array.isArray(product.color)) {
+                            if (!product.color.some(c => selectedColors.includes(c))) return false;
+                        } else {
+                            if (!selectedColors.includes(product.color)) return false;
+                        }
+                    } else {
+                        return false; 
+                    }
+                }
+                if (selectedCategories.length > 0 && !selectedCategories.includes(product.category)) {
+                    return false;
+                }
+                const price = parseFloat(product.price);
+                if (price < priceRange[0] || price > priceRange[1]) return false;
+
+                return true;
+            })
+            .sort((a, b) => {
+                if (sortOption === 'Price: Low to High') {
+                    return parseFloat(a.price) - parseFloat(b.price);
+                } else if (sortOption === 'Price: High to Low') {
+                    return parseFloat(b.price) - parseFloat(a.price);
+                }
+                return 0;
+            });
+    }, [products, selectedColors, selectedCategories, priceRange, sortOption]);
+
     const colors = [
         { name: 'Black', code: '#000000' },
         { name: 'Gold', code: '#FFD700' },
@@ -22,7 +64,7 @@ const Search = () => {
         { name: 'Pink', code: '#FFC0CB' }
     ];
 
-    const categories = ['Corner sofa', 'best seller', 'Sofa bed'];
+    const categories = ['Furniture', 'Beds', 'Kitchen'];
 
     const toggleColor = (color) => {
         setSelectedColors(prev =>
@@ -62,16 +104,16 @@ const Search = () => {
                         <div className="filter-header">Sort by</div>
                         <div className="sort-options">
                             <label className="checkbox-option">
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     checked={sortOption === 'Price: Low to High'}
                                     onChange={() => setSortOption('Price: Low to High')}
                                 />
                                 Price: Low to High
                             </label>
                             <label className="checkbox-option">
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     checked={sortOption === 'Price: High to Low'}
                                     onChange={() => setSortOption('Price: High to Low')}
                                 />
@@ -111,14 +153,14 @@ const Search = () => {
                         <div className="color-options">
                             {colors.map(color => (
                                 <label key={color.name} className="color-option">
-                                    <input 
-                                        type="checkbox" 
+                                    <input
+                                        type="checkbox"
                                         checked={selectedColors.includes(color.name)}
                                         onChange={() => toggleColor(color.name)}
                                         className="hidden-checkbox"
                                     />
-                                    <span 
-                                        className="color-indicator" 
+                                    <span
+                                        className="color-indicator"
                                         style={{ backgroundColor: color.code }}
                                     />
                                     {color.name}
@@ -132,8 +174,8 @@ const Search = () => {
                         <div className="category-options">
                             {categories.map(category => (
                                 <label key={category} className="checkbox-option">
-                                    <input 
-                                        type="checkbox" 
+                                    <input
+                                        type="checkbox"
                                         checked={selectedCategories.includes(category)}
                                         onChange={() => toggleCategory(category)}
                                     />
@@ -152,18 +194,24 @@ const Search = () => {
                 </div>
 
                 <div className="products-grid">
-                    {NewArrivals.map((product, i) => (
-                        <ProductCard2
-                            key={i}
-                            id={product.id}
-                            image={product.image}
-                            title={product.title}
-                            price={product.originalPrice}
-                            discount={getDiscount(product.originalPrice, product.price)}
-                            slug={product.slug}
-                        />
-                    ))}
+                    {filteredProducts.length === 0 ? (
+                        <div className="no-products-message">No Products match</div>
+                    ) : (
+                        filteredProducts.map((product) => (
+                            <ProductCard2
+                                key={product.id}
+                                id={product.id}
+                                image={product.image}
+                                title={product.title}
+                                price={parseFloat(product.price)}
+                                originalprice={parseFloat(product.originalPrice)}
+                                discount={getDiscount(product.originalPrice, product.price)}
+                                slug={product.slug}
+                            />
+                        ))
+                    )}
                 </div>
+
             </div>
             <Footer />
         </>

@@ -7,24 +7,28 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { FiMenu, FiX } from "react-icons/fi";
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';  // Use `useNavigate` here
+import { Link, useNavigate } from 'react-router-dom';
 import { toggleStatusTab, setCartFromStorage } from '../../stores/cart';
 import { toggleStatusTabFav, setFavFromStorage } from '../../stores/favourite';
 import { IoStorefront } from "react-icons/io5";
-
+import Cookies from 'js-cookie';
+import { useAuthStore } from "../../stores/UserSlice";
+import { toast } from 'react-toastify';
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [totalQuantity, setTotalQuantity] = useState(0);
-    const [favCount, setFavCount] = useState(0); // Track favorite count
-    const [searchQuery, setSearchQuery] = useState(''); // Store the search query
-    const [searchResults, setSearchResults] = useState([]); // Store the search results
+    const [favCount, setFavCount] = useState(0);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const dispatch = useDispatch();
-    const navigate = useNavigate();  // Use `useNavigate` instead of `useHistory`
+    const navigate = useNavigate();
     const carts = useSelector(store => store.cart.items);
-    const favorites = useSelector(store => store.favorites.favorites); // Get favorites from the store
-    const products = useSelector(store => store.products.items); // Assuming you have a product list in the Redux store
+    const favorites = useSelector(store => store.favorites.favorites);
+    const products = useSelector(store => store.products.items);
+    const { logout, isLoading } = useAuthStore();
 
-    // استرجاع البيانات من localStorage عند تحميل Navbar
+
     useEffect(() => {
         const storedCart = localStorage.getItem("carts");
         if (storedCart) {
@@ -35,29 +39,30 @@ const Navbar = () => {
         const storedFav = localStorage.getItem("favorites");
         if (storedFav) {
             const favItems = JSON.parse(storedFav);
-            dispatch(setFavFromStorage(favItems));  // Initialize favorites from localStorage
+            dispatch(setFavFromStorage(favItems));
+        }
+        const token = Cookies.get('token');
+        if (token) {
+            setIsLoggedIn(true);
         }
     }, [dispatch]);
 
-    // حساب عدد العناصر في السلة
     useEffect(() => {
         let total = 0;
         carts.forEach(item => total += item.quantity);
         setTotalQuantity(total);
     }, [carts]);
 
-    // حساب عدد العناصر في المفضلة
     useEffect(() => {
         setFavCount(favorites.length);
     }, [favorites]);
 
-    // وظيفة البحث
     const handleSearchChange = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
         if (query.length > 0) {
             const results = products.filter(product =>
-                product.title.toLowerCase().includes(query.toLowerCase()) // البحث داخل عنوان المنتج
+                product.title.toLowerCase().includes(query.toLowerCase())
             );
             setSearchResults(results);
         } else {
@@ -65,9 +70,8 @@ const Navbar = () => {
         }
     };
 
-    // الذهاب إلى صفحة نتائج البحث عند الضغط على النتيجة
     const handleSearchResultClick = (slug) => {
-        navigate(`/search/${slug}`); // Use `navigate` instead of `history.push`
+        navigate(`/search/${slug}`);
     };
 
     const handleCartClick = () => {
@@ -75,8 +79,25 @@ const Navbar = () => {
     };
 
     const handleFavClick = () => {
-        dispatch(toggleStatusTabFav());  // Toggle favorites tab
+        dispatch(toggleStatusTabFav());
     };
+
+    const handleLogout = async () => {
+        try {
+            const token = Cookies.get('token'); 
+            if (!token) throw new Error("No token found");
+            await logout(token);
+            Cookies.remove('token');
+            setIsLoggedIn(false);
+            toast.success('Logout successful!');
+            navigate('/');
+        } catch (error) {
+            toast.error('Error in Logout');
+            console.log(error);
+        }
+    };
+
+
 
     return (
         <div className='ED-Navbar'>
@@ -108,26 +129,45 @@ const Navbar = () => {
                 <li className='ED-Navbar-ul-li' onClick={handleFavClick}>
                     <FaHeart size={20} />
                     My Favourite
-                    {favCount > 0 && <span className='ED-fav-count'>{favCount}</span>} {/* Display favorite count */}
+                    {favCount > 0 && <span className='ED-fav-count'>{favCount}</span>}
                 </li>
                 <li className='ED-Navbar-ul-li cart-icon' onClick={handleCartClick}>
                     <LiaShoppingCartSolid size={20} />
                     Your Cart
                     {totalQuantity > 0 && <span className='ED-cart-count'>{totalQuantity}</span>}
                 </li>
-                <Link to='/myprofile' className='ED-myprofile'>
-                    <li className='ED-Navbar-ul-li'>
-                        <FaRegUserCircle size={20} />
-                        My Account
-                    </li>
-                </Link>
-                <Link to='/vendorhome' className='ED-myprofile'>
-                    <li className='ED-Navbar-ul-li'>
-                        <IoStorefront size={20} />
-                        Join as Vendor
-                    </li>
-                </Link>
-
+                {isLoggedIn ? (
+                    <>
+                        <Link to='/myprofile' className='ED-myprofile'>
+                            <li className='ED-Navbar-ul-li'>
+                                <FaRegUserCircle size={20} />
+                                My Account
+                            </li>
+                        </Link>
+                        <Link to='/vendorhome' className='ED-myprofile'>
+                            <li className='ED-Navbar-ul-li'>
+                                <IoStorefront size={20} />
+                                Join as Vendor
+                            </li>
+                        </Link>
+                        <li className='ED-Navbar-ul-li' onClick={handleLogout}>
+                            Logout
+                        </li>
+                    </>
+                ) : (
+                    <>
+                        <Link to='/login' className='ED-myprofile'>
+                            <li className='ED-Navbar-ul-li'>
+                                Login
+                            </li>
+                        </Link>
+                        <Link to='/signup' className='ED-myprofile'>
+                            <li className='ED-Navbar-ul-li'>
+                                Signup
+                            </li>
+                        </Link>
+                    </>
+                )}
             </ul>
         </div>
     );

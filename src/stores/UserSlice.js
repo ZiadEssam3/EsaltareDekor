@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import Cookies from "js-cookie";
 import {
     signupUser,
     loginUser,
@@ -16,24 +17,25 @@ export const useAuthStore = create((set) => ({
     isLoading: false,
     isCheckingAuth: true,
 
-    signup: async (email, password, username) => {
+    signup: async (email, password, name, password_confirmation) => {
         set({ isLoading: true, error: null });
         try {
-            const res = await signupUser(email, password, username);
+            const res = await signupUser(email, password, name, password_confirmation);
 
-            if (res.data?.user) {
-                set({ user: res.data.user, isAuthenticated: true });
-            } else {
+            if (!res.data || !res.data.user) {
                 throw new Error("User data missing in response");
             }
+
+            set({ user: res.data.user, isAuthenticated: true });
+            return res.data.user;
         } catch (err) {
-            set({ error: err.response?.data?.message || err.message || "Signup failed" });
+            set({ error: err?.message || "Signup failed!" });
             throw err;
         } finally {
             set({ isLoading: false });
         }
     },
-    
+
     login: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
@@ -44,18 +46,36 @@ export const useAuthStore = create((set) => ({
             throw err;
         }
     },
-
-    logout: async () => {
+    forgotPassword: async (email) => {
+        set({ isLoading: true, error: null });
+        try {
+            const res = await sendResetEmail(email);
+            set({ message: res.data.message, isLoading: false });
+        } catch (err) {
+            set({ error: err.response?.data?.message || "Failed to send email", isLoading: false });
+            throw err;
+        }
+    },
+    resetPassword: async (token, email, password, password_confirmation) => {
+        set({ isLoading: true, error: null });
+        try {
+            const res = await resetPasswordWithToken(token, email, password, password_confirmation);
+            set({ message: res.data.message, isLoading: false });
+        } catch (err) {
+            set({ error: err.response?.data?.message || "Reset failed", isLoading: false });
+            throw err;
+        }
+    },
+    logout: async (token) => {
         set({ isLoading: true });
         try {
-            await logoutUser();
+            await logoutUser(token);
             set({ user: null, isAuthenticated: false, isLoading: false });
         } catch (err) {
             set({ error: "Logout failed", isLoading: false });
             throw err;
         }
     },
-
     verifyEmail: async (code) => {
         set({ isLoading: true, error: null });
         try {
@@ -77,25 +97,5 @@ export const useAuthStore = create((set) => ({
         }
     },
 
-    forgotPassword: async (email) => {
-        set({ isLoading: true, error: null });
-        try {
-            const res = await sendResetEmail(email);
-            set({ message: res.data.message, isLoading: false });
-        } catch (err) {
-            set({ error: err.response?.data?.message || "Failed to send email", isLoading: false });
-            throw err;
-        }
-    },
 
-    resetPassword: async (token, password) => {
-        set({ isLoading: true, error: null });
-        try {
-            const res = await resetPasswordWithToken(token, password);
-            set({ message: res.data.message, isLoading: false });
-        } catch (err) {
-            set({ error: err.response?.data?.message || "Reset failed", isLoading: false });
-            throw err;
-        }
-    },
 }));

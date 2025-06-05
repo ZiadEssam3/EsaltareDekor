@@ -58,7 +58,6 @@ const LoginPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    {/* Eye Icon for showing/hiding password */}
                     <div className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff /> : <Eye />}
                     </div>

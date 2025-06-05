@@ -3,20 +3,54 @@ import { NewArrivals } from '../../assets/assets';
 import { useDispatch } from 'react-redux';
 import { removeFromFav } from '../../stores/favourite';
 import './FavouriteItem.css';
+import { getCookie } from '../../utils/config';
+import axios from 'axios';
 
 const FavItem = (props) => {
     const { productId } = props.data;
     const [detail, setDetail] = useState({});
     const dispatch = useDispatch();
-
+    const token = getCookie('authToken');
     useEffect(() => {
         const findDetail = NewArrivals.find(product => product.id === productId);
         setDetail(findDetail);
     }, [productId]);
 
-    const handleRemove = () => {
+    const handleRemove = async () => {
         dispatch(removeFromFav({ productId }));
+        try {
+            await axios.delete(`http://web-production-0ba5.up.railway.app/api/favourites/${productId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            toast.success('Item removed from Favourite');
+        } catch (error) {
+            console.error('Failed to delete item from Favourite:', error);
+            toast.error('Error removing item from Favourite');
+        }
     };
+
+    const getFavItems = async () => {
+        try {
+            const response = await axios.get('http://web-production-0ba5.up.railway.app/api/favourites', {
+                // params: { user_id: userId },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            console.log("Cart items:", response.data);
+        } catch (error) {
+            console.error("Failed to fetch Favourite items:", error);
+        }
+    };
+    /*useEffect(() => {
+        if (userId && token) {
+            getFavItems();
+        }
+    }, [userId, token]);*/
+    //const detail = response.data;  
+    //console.log(detail);
 
     return (
         <div className="fav-item">

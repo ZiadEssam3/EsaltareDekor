@@ -9,6 +9,7 @@ import { addToFav } from '../../stores/favourite';
 import { addToCompare } from '../../stores/product';
 import { toast } from 'react-toastify';
 import { color } from 'framer-motion';
+import axios from 'axios';
 
 const ProductCard2 = ({ id, image, title, originalprice, category, description, discount, slug, rating, onClick }) => {
     const carts = useSelector(store => store.cart.items);
@@ -19,28 +20,47 @@ const ProductCard2 = ({ id, image, title, originalprice, category, description, 
     const isInCompare = compareList.some(product => product.id === id);
     const compareLimitReached = compareList.length >= 4;
 
-    const handleAddToCart = () => {
+    /*const isLoggedIn = () => {
+            return !!localStorage.getItem('authToken');
+    };*/
+    //if (isLoggedIn()) {
+
+    const handleAddToCart = async () => {
         try {
+
+            // add to the Redux 
             dispatch(addToCart({
                 productId: id,
                 quantity: 1
             }));
-            toast.success(`${title} added to cart! 🛒`);
+            // send to data base 
+            await axios.post('http://web-production-0ba5.up.railway.app/api/cart', {
+                product_id: id,
+                user_id: userId,
+                quantity: 1
+            });
+
+            toast.success(`${title} added to cart!`);
         } catch (error) {
-            toast.error('Failed to add item to cart 😞');
+            toast.error('Failed to add item to cart');
         }
     };
 
-    const handleAddToFav = () => {
+    const handleAddToFav = async () => {
         try {
             dispatch(addToFav({ productId: id }));
-            toast.success(`${title} added to favorites! ❤️`);
+            // send to data base 
+            await axios.post('http://web-production-0ba5.up.railway.app/api/favourites', {
+                product_id: id,
+                user_id: userId,
+            });
+            toast.success(`${title} added to favorites!`);
         } catch (error) {
-            toast.error('Failed to add item to favorites 😞');
+            toast.error('Failed to add item to favorites');
         }
     };
 
-    const handleAddToCompare = () => {
+    const handleAddToCompare = async () => {
         console.log("Adding to compare", { id, image, title, originalprice, rating, slug });
         try {
             dispatch(addToCompare({
@@ -53,9 +73,13 @@ const ProductCard2 = ({ id, image, title, originalprice, category, description, 
                 category,
                 description
             }));
-            toast.success(`${title} added to comparison! ⚖️`);
+            await axios.post('http://web-production-0ba5.up.railway.app/api/compare', {
+                product_id: id,
+                user_id: userId,
+            });
+            toast.success(`${title} added to comparison!`);
         } catch (error) {
-            toast.error('Failed to add item to comparison 😞');
+            toast.error('Failed to add item to comparison');
             console.error(error);  // Display the error in the console for debugging
         }
     };

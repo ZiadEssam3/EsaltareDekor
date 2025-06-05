@@ -89,9 +89,9 @@ const Product = () => {
                 productId: detail.id,
                 quantity: quantity
             }));
-            toast.success(`${detail?.title} added to cart! 🛒`);
+            toast.success(`${detail?.title} added to cart!`);
         } catch (error) {
-            toast.error('Failed to add item to cart 😞');
+            toast.error('Failed to add item to cart');
         }
     };
 
@@ -101,9 +101,9 @@ const Product = () => {
             dispatch(addToFav({
                 productId: detail.id
             }));
-            toast.success(`${detail?.title} added to favorites! ❤️`);
+            toast.success(`${detail?.title} added to favorites!`);
         } catch (error) {
-            toast.error('Failed to add item to favorites 😞');
+            toast.error('Failed to add item to favorites');
         }
     };
 

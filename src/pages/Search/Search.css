@@ -148,3 +148,10 @@
         grid-template-columns: 1fr;
     }
 }
+
+.no-products-message {
+    font-size: 18px;
+    color: #555;
+    text-align: center;
+    margin-top: 40px;
+}

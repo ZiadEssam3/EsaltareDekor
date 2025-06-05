@@ -91,3 +91,22 @@
     cursor: pointer;
     gap: 5px;
 }
+
+.avatar-wrapper {
+    width: 100px;
+    height: 100px;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.default-avatar-icon {
+    width: 100px;
+    height: 100px;
+    color: #999;
+    border-radius: 50%;
+}

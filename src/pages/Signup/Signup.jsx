@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'; // Import the Eye and EyeOff icons
+import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import Input from "../../components/Input/Input";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -10,18 +10,18 @@ import { FaFacebookF } from "react-icons/fa";
 import { useAuthStore } from "../../stores/UserSlice";
 
 const SignupPage = () => {
-    const [username, setUsername] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false); // Track password visibility
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Track confirm password visibility
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const { signup, error, isLoading } = useAuthStore();
     const navigate = useNavigate();
 
-    const handleSignUp = async (e) => {
+    const handleSignUp =  (e) => {
         e.preventDefault();
-        if (!username || !email || !password || !confirmPassword) {
+        if (!name || !email || !password || !confirmPassword) {
             toast.error('All fields are required!');
             return;
         }
@@ -30,12 +30,13 @@ const SignupPage = () => {
             return;
         }
         try {
-            await signup(email, password, username);
+            signup(email, password, name, confirmPassword); 
             toast.success('Signup successful! Please verify your email.');
             navigate("/login");
+
         } catch (error) {
-            console.error("Signup error:", error);
-            toast.error(error.message || 'Signup failed! Please try again.');
+            console.error("Signup error:", error.message);
+            toast.error(error.response?.data?.message || error.message || 'Signup failed! Please try again.');
         }
     };
 
@@ -49,9 +50,9 @@ const SignupPage = () => {
                 <Input
                     icon={User}
                     type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Full Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                 />
                 <Input
                     icon={Mail}
@@ -63,25 +64,25 @@ const SignupPage = () => {
                 <div className="password-input-container">
                     <Input
                         icon={Lock}
-                        type={showPassword ? "text" : "password"} // Toggle password visibility
+                        type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <div className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
-                        {showPassword ? <EyeOff /> : <Eye />} {/* Toggle Eye icon */}
+                        {showPassword ? <EyeOff /> : <Eye />}
                     </div>
                 </div>
                 <div className="password-input-container">
                     <Input
                         icon={Lock}
-                        type={showConfirmPassword ? "text" : "password"} // Toggle confirm password visibility
+                        type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm Password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     <div className="toggle-password" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                        {showConfirmPassword ? <EyeOff /> : <Eye />} {/* Toggle Eye icon */}
+                        {showConfirmPassword ? <EyeOff /> : <Eye />}
                     </div>
                 </div>
                 {password !== confirmPassword && confirmPassword.length > 0 && (
