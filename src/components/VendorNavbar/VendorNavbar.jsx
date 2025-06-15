@@ -15,13 +15,16 @@ function VendorNavbar() {
                 </div>
                 <div className="account">
                     <i className="account-icon"><FaRegUserCircle size={20} /></i>
-                    <div>My Account</div>
+                    <Link to='/vendorprofile' className='vendor-console-package'>
+                        <div>My Account</div>
+                    </Link>
                 </div>
             </div>
 
             <nav className="ED-vendor-nav">
                 <Link to='/vendorhome' className="vendor-nav-links">MyPackage</Link>
                 <Link to='/vendorprofile' className="vendor-nav-links">Profile</Link>
+                <Link to='/add-brand' className="vendor-nav-links">AddBrand</Link>
                 <Link to='/vendoraddproduct' className="vendor-nav-links">Add Product</Link>
             </nav>
 

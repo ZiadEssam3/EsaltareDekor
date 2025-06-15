@@ -6,22 +6,34 @@ import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import Navbar from '../../components/Navbar/Navbar';
 import BottomNavBar from '../../components/BottomNavbar/BottomNavbar';
 import ProductCard2 from '../../components/ProductCard2/ProductCard2';
+const baseURL = 'http://127.0.0.1:8000/';
 
 const Search = () => {
     const [products, setProducts] = useState([]);
     const [sortOption, setSortOption] = useState('Price: Low to High');
     const [selectedColors, setSelectedColors] = useState([]);
-    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);  
     const [priceRange, setPriceRange] = useState([0, 50000]);
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/products')
+        axios.get(`${baseURL}api/esaltare/products/filter`)
             .then(response => {
+                console.log('pricture 1', response.data[0].image);
                 setProducts(response.data);
             })
             .catch(error => {
                 console.error('Error fetching products:', error);
             });
+    }, []);
+
+    useEffect(() => {
+        axios.get(`${baseURL}api/esaltare/categories`)
+            .then(res => {
+                console.log('Categories response:', res.data.data);
+                setCategories(res.data.data);
+            })
+            .catch(err => console.error('Error fetching categories:', err));
     }, []);
 
     const filteredProducts = useMemo(() => {
@@ -35,10 +47,10 @@ const Search = () => {
                             if (!selectedColors.includes(product.color)) return false;
                         }
                     } else {
-                        return false; 
+                        return false;
                     }
                 }
-                if (selectedCategories.length > 0 && !selectedCategories.includes(product.category)) {
+                if (selectedCategories.length > 0 && !selectedCategories.includes(product.category_id)) {
                     return false;
                 }
                 const price = parseFloat(product.price);
@@ -64,8 +76,6 @@ const Search = () => {
         { name: 'Pink', code: '#FFC0CB' }
     ];
 
-    const categories = ['Furniture', 'Beds', 'Kitchen'];
-
     const toggleColor = (color) => {
         setSelectedColors(prev =>
             prev.includes(color)
@@ -74,11 +84,11 @@ const Search = () => {
         );
     };
 
-    const toggleCategory = (category) => {
+    const toggleCategory = (categoryId) => {
         setSelectedCategories(prev =>
-            prev.includes(category)
-                ? prev.filter(c => c !== category)
-                : [...prev, category]
+            prev.includes(categoryId)
+                ? prev.filter(c => c !== categoryId)
+                : [...prev, categoryId]
         );
     };
 
@@ -86,11 +96,6 @@ const Search = () => {
         const newPriceRange = [...priceRange];
         newPriceRange[index] = parseInt(e.target.value);
         setPriceRange(newPriceRange);
-    };
-
-    const getDiscount = (original, current) => {
-        const discount = ((original - current) / original) * 100;
-        return Math.round(discount);
     };
 
     return (
@@ -172,14 +177,14 @@ const Search = () => {
                     <div className="filter-section">
                         <div className="filter-header">Product Categories</div>
                         <div className="category-options">
-                            {categories.map(category => (
-                                <label key={category} className="checkbox-option">
+                            {Array.isArray(categories) && categories.map(category => (
+                                <label key={category.id} className="checkbox-option">
                                     <input
                                         type="checkbox"
-                                        checked={selectedCategories.includes(category)}
-                                        onChange={() => toggleCategory(category)}
+                                        checked={selectedCategories.includes(category.id)}
+                                        onChange={() => toggleCategory(category.id)}
                                     />
-                                    {category}
+                                    {category.name}
                                 </label>
                             ))}
                         </div>
@@ -188,7 +193,6 @@ const Search = () => {
                     <div className="filter-section">
                         <div className="filter-header">Buy by</div>
                         <div className="buy-by-options">
-                            {/* Empty as in your image */}
                         </div>
                     </div>
                 </div>
@@ -201,12 +205,13 @@ const Search = () => {
                             <ProductCard2
                                 key={product.id}
                                 id={product.id}
-                                image={product.image}
-                                title={product.title}
-                                price={parseFloat(product.price)}
-                                originalprice={parseFloat(product.originalPrice)}
-                                discount={getDiscount(product.originalPrice, product.price)}
-                                slug={product.slug}
+                                image={`${baseURL}storage/${product.image}`}
+                                title={product.description}
+                                originalprice={product.price}
+                                discount={product.sale}
+                                category={product.category_id}
+                                slug={product.id}
+                                description={product.description}
                             />
                         ))
                     )}

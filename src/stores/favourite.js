@@ -1,43 +1,47 @@
+// favSlice.js (Redux Slice)
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     favorites: [],
     statusTab: false,
-};
-
-// Save favorites to localStorage
-const updateFavStorage = (favorites) => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
+    loading: false,
+    error: null
 };
 
 const favSlice = createSlice({
     name: 'favorites',
     initialState,
     reducers: {
-        // Add product to favorites (if not already there)
+        setFavFromStorage(state, action) {
+            state.favorites = action.payload || [];
+        },
         addToFav(state, action) {
             const product = action.payload;
             const exists = state.favorites.find(item => item.productId === product.productId);
-
             if (!exists) {
                 state.favorites.push(product);
-                updateFavStorage(state.favorites);
             }
+        },
+        removeFromFav(state, action) {
+            const { id } = action.payload;
+            state.favorites = state.favorites.filter(item => item.id !== id);
+        },
+        refreshFavorites(state, action) {
+            state.favorites = action.payload;
+            state.error = null;
         },
         toggleStatusTabFav(state) {
             state.statusTab = !state.statusTab;
         },
-        // Remove product from favorites
-        removeFromFav(state, action) {
-            const { productId } = action.payload;
-            state.favorites = state.favorites.filter(item => item.productId !== productId);
-            updateFavStorage(state.favorites);
+        setLoading(state, action) {
+            state.loading = action.payload;
         },
-
-        // Load favorites from localStorage
-        setFavFromStorage(state, action) {
-            state.favorites = action.payload || [];
+        setError(state, action) {
+            state.error = action.payload;
         },
+        clearFavorites(state) {
+            state.favorites = [];
+        }
     }
 });
 
@@ -45,7 +49,11 @@ export const {
     addToFav,
     removeFromFav,
     setFavFromStorage,
-    toggleStatusTabFav
+    toggleStatusTabFav,
+    refreshFavorites,
+    setLoading,
+    setError,
+    clearFavorites
 } = favSlice.actions;
 
 export default favSlice.reducer;

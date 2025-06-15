@@ -6,96 +6,134 @@ import { FaCodeCompare } from "react-icons/fa6";
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart } from '../../stores/cart';
 import { addToFav } from '../../stores/favourite';
-import { addToCompare } from '../../stores/product';
 import { toast } from 'react-toastify';
-import { color } from 'framer-motion';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const ProductCard2 = ({ id, image, title, originalprice, category, description, discount, slug, rating, onClick }) => {
+const ProductCard2 = ({
+    id, image, title, originalprice, category,
+    description, discount, slug, rating, onClick
+}) => {
+
     const carts = useSelector(store => store.cart.items);
     const favorites = useSelector(store => store.favorites.favorites);
-    const compareList = useSelector(store => store.products.compare);
     const dispatch = useDispatch();
 
-    const isInCompare = compareList.some(product => product.id === id);
-    const compareLimitReached = compareList.length >= 4;
+    const cartURL = 'http://127.0.0.1:8000/api/cart/';
+    const favURL = 'http://127.0.0.1:8000/api/favourites';
+    const compareURL = 'http://127.0.0.1:8000/api/compare';
 
-    /*const isLoggedIn = () => {
-            return !!localStorage.getItem('authToken');
-    };*/
-    //if (isLoggedIn()) {
+    const token = Cookies.get('token');
 
     const handleAddToCart = async () => {
-        try {
+        if (!token) {
+            toast.error('Please login to add items to cart');
+            return;
+        }
 
-            // add to the Redux 
+        try {
             dispatch(addToCart({
                 productId: id,
+                title,
+                image,
+                price: Math.round(originalprice - (originalprice * discount / 100)),
                 quantity: 1
             }));
-            // send to data base 
-            await axios.post('http://web-production-0ba5.up.railway.app/api/cart', {
+
+            await axios.post(cartURL, {
                 product_id: id,
-                user_id: userId,
                 quantity: 1
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                withCredentials: true
             });
 
             toast.success(`${title} added to cart!`);
         } catch (error) {
-            toast.error('Failed to add item to cart');
+            console.error('Error details:', error.response?.data);
+            toast.error(error.response?.data?.message || 'Failed to add item to cart');
         }
     };
 
     const handleAddToFav = async () => {
+        if (!token) {
+            toast.error('Please login to add items to Favourite');
+            return;
+        }
         try {
             dispatch(addToFav({ productId: id }));
-            // send to data base 
-            await axios.post('http://web-production-0ba5.up.railway.app/api/favourites', {
-                product_id: id,
-                user_id: userId,
-            });
+            await axios.post(favURL, {
+                product_id: id
+            },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    withCredentials: true
+                });
             toast.success(`${title} added to favorites!`);
         } catch (error) {
             toast.error('Failed to add item to favorites');
+            console.error(error);
         }
     };
 
     const handleAddToCompare = async () => {
-        console.log("Adding to compare", { id, image, title, originalprice, rating, slug });
+        if (!token) {
+            toast.error('Please login to add items to comparison');
+            return;
+        }
+
         try {
-            dispatch(addToCompare({
-                id,
-                image,
-                title,
-                originalprice,
-                rating,
-                slug,
-                category,
-                description
-            }));
-            await axios.post('http://web-production-0ba5.up.railway.app/api/compare', {
-                product_id: id,
-                user_id: userId,
+            const res = await axios.get(compareURL, {
+                headers: { Authorization: `Bearer ${token}` }
             });
+
+            const compareList = res.data.data || [];
+
+            if (compareList.some(item => item.product.id === id)) {
+                toast.info(`${title} is already in comparison list`);
+                return;
+            }
+
+            if (compareList.length >= 4) {
+                toast.error('Comparison list limit reached (4 items max)');
+                return;
+            }
+
+            await axios.post(compareURL, {
+                product_id: id
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                withCredentials: true
+            });
+
             toast.success(`${title} added to comparison!`);
         } catch (error) {
-            toast.error('Failed to add item to comparison');
-            console.error(error);  // Display the error in the console for debugging
+            console.error('Error adding to compare:', error.response?.data);
+            toast.error(error.response?.data?.message || 'Failed to add item to comparison');
         }
     };
 
-
-
     return (
         <div className="ED-product-2-card">
-            <Link to={`/product/${slug}`}>
-                <img src={image} alt={title} className="ED-product-2-image" onClick={onClick} />
+            <Link to={`/product/${id}`}>
+                <img
+                    src={image}
+                    alt={title}
+                    className="ED-product-2-image"
+                    onClick={onClick}
+                />
             </Link>
 
             <div className="ED-product-2-info">
                 <h3 className="ED-product-2-title">{title}</h3>
                 <p className="ED-product-2-price">
-                    <del style={{ color: "red" }}>fairy {originalprice}.00</del>
+                    <del style={{ color: "red" }}>fairy {originalprice}</del>
                 </p>
                 <h5>{Math.round(originalprice - (originalprice * discount / 100))}.00</h5>
                 <span className="ED-product-2-discount">discount {discount}%</span>
@@ -112,8 +150,7 @@ const ProductCard2 = ({ id, image, title, originalprice, category, description, 
             <button
                 className='ED-add-compare'
                 onClick={handleAddToCompare}
-                disabled={isInCompare || compareLimitReached}
-                title={isInCompare ? 'Already added' : compareLimitReached ? 'Limit reached' : 'Add to compare'}
+                title="Add to compare"
             >
                 <FaCodeCompare />
             </button>

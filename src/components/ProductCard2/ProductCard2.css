@@ -73,7 +73,7 @@
     background: none;
     border: none;
     position: relative;
-    bottom: 470px;
+    bottom: 475px;
     border: 1px solid var(--whitecolor);
     border-radius: 16px;
     width: 30px;
@@ -86,7 +86,7 @@
     background: none;
     border: none;
     position: relative;
-    bottom: 495px;
+    bottom: 500px;
     border: 1px solid var(--whitecolor);
     border-radius: 16px;
     width: 33px;
@@ -102,7 +102,7 @@
 
 
 @media (max-width: 488px) {
-    .ED-product-2-card  {
+    .ED-product-2-card {
         margin-bottom: 10px;
     }
 }

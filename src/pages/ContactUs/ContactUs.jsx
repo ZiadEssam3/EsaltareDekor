@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import Navbar from '../../components/Navbar/Navbar';
 import BottomNavBar from '../../components/BottomNavbar/BottomNavbar';
 import Footer from '../../components/Footer/Footer';
+import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
 const ContactUs = () => {
     const [formData, setFormData] = useState({
@@ -10,6 +13,9 @@ const ContactUs = () => {
         email: '',
         message: '',
     });
+
+    const token = Cookies.get('token');
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -17,10 +23,40 @@ const ContactUs = () => {
             [name]: value,
         }));
     };
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert('Form submitted');
+        const url = 'http://127.0.0.1:8000/api/contact';
+
+        try {
+            if (token) {
+                // Logged-in user: only send message with Authorization header
+                await axios.post(
+                    url,
+                    { message: formData.message },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+            } else {
+                // Guest user: send name, email, and message
+                await axios.post(url, {
+                    name: formData.name,
+                    email: formData.email,
+                    message: formData.message,
+                });
+            }
+
+            toast.success(`Message sent successfully!`);
+            setFormData({ name: '', email: '', message: '' });
+        } catch (error) {
+            console.error(error);
+            toast.error(`Failed to send message`);
+        }
     };
+
     return (
         <>
             <TopNavbar />
@@ -31,30 +67,34 @@ const ContactUs = () => {
                     <div className="col-md-6">
                         <h2>Contact Us</h2>
                         <form onSubmit={handleSubmit}>
-                            <div className="mb-3">
-                                <label htmlFor="name" className="form-label">Full Name</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="name"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="email" className="form-label">Email Address</label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
+                            {!token && (
+                                <>
+                                    <div className="mb-3">
+                                        <label htmlFor="name" className="form-label">Full Name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="name"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="email" className="form-label">Email Address</label>
+                                        <input
+                                            type="email"
+                                            className="form-control"
+                                            id="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                </>
+                            )}
                             <div className="mb-3">
                                 <label htmlFor="message" className="form-label">Message</label>
                                 <textarea
@@ -95,4 +135,5 @@ const ContactUs = () => {
         </>
     );
 };
+
 export default ContactUs;

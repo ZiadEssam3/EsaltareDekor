@@ -1,26 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchDiscountCode } from '../services/discountService';
+import { getBrandAnnouncements } from '../services/discountService';
 
 export const getDiscountCode = createAsyncThunk(
   'discount/getDiscountCode',
   async () => {
-    return await fetchDiscountCode();
+    return await getBrandAnnouncements();
   }
 );
 
 const discountSlice = createSlice({
   name: 'discount',
   initialState: {
-    code: '',
+    title: '',
     percentage: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getDiscountCode.fulfilled, (state, action) => {
-      state.code = action.payload.code;
-      state.percentage = action.payload.percentage;
+      const firstDiscount = action.payload[0]; 
+      state.title = firstDiscount?.title || '';
+      state.percentage = firstDiscount?.percentage || null;
     });
   }
 });
+
 
 export default discountSlice.reducer;

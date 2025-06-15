@@ -8,7 +8,7 @@ import CartTab from './components/Cart/CartTab';
 import Checkout from './pages/Checkout/Checkout';
 import { useDispatch } from 'react-redux';
 import { setCartFromStorage } from './stores/cart';
-import { ToastContainer } from 'react-toastify';
+import { Slide, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FavTab from './components/Favourite/FavouriteTab';
 import SearchPage from './pages/Search/Search';
@@ -28,6 +28,9 @@ import DesignerPage from './pages/DesignerPage/DesignerPage';
 import SetNewPassword from './pages/SetNewPassword/SetNewPassword';
 import Success from './pages/Stripe/Sucess';
 import Cancel from './pages/Stripe/Cancel';
+import AccessDenied from './pages/Vendor/AccessDenied/AccessDenied';
+import SearchResults from './pages/SearchResults/SearchResults';
+import AddBrand from './pages/Vendor/AddBrand/AddBrand';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -44,9 +47,10 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path='/categories' element={<Category />} />
-        <Route path="/product/:slug" element={<Product />} />
+        <Route path="/product/:id" element={<Product />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/search/:query" element={<SearchResults />} />
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/trackorder" element={<OrderTracking />} />
         <Route path="/designer" element={<DesignerPage />} />
@@ -58,14 +62,16 @@ const App = () => {
         <Route path="/vendorhome" element={<VendorHome />} />
         <Route path="/vendorprofile" element={<VendorProfile />} />
         <Route path="/vendoraddproduct" element={<VendorProduct />} />
+        <Route path="/add-brand" element={<AddBrand />} />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
+        <Route path="/access-denied" element={<AccessDenied />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
 
 
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -74,6 +80,19 @@ const App = () => {
         draggable
         theme="light"
       />
+
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+        transition={Slide}
+      />
+
       <ChatInterface />
       <FavTab />
       <CartTab />

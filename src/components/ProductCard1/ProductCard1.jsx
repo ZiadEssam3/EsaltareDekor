@@ -6,7 +6,7 @@ const ProductCard1 = ({ id, category, slug, title, originalPrice, discount, imag
     return (
         <div className="product-card" style={{ backgroundColor: bgColor }}>
             <div className="product-category">{category}</div>
-            <Link to={`/product/${slug}`}>
+            <Link to={`/product/${id}`}>
                 <img src={image} alt={title} className="product-image" />
             </Link>
             <p className="product-title">{title}</p>

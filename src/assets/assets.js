@@ -1,5 +1,4 @@
 /**************** asset folder inserted all images and icons for EsaltareDekor ****************/
-
 /* Importe For all Images And Icons */
 import ED_logo from './ED_logo.png';
 
@@ -23,6 +22,8 @@ import Product1 from './Product1.png';
 
 
 import Sale1 from './Sale1.jpg';
+import Sale2 from './Sale2.jpg';
+import Sale3 from './Sale3.jpg';
 
 
 import brand1 from './B1.png';
@@ -58,9 +59,10 @@ export const Deals = {
 }
 export const Sale = {
     Sale1,
+    Sale2,
+    Sale3
 }
 
-/**********************************/
 export const NewArrivals = [
     {
         id: 1,
@@ -223,7 +225,6 @@ export const NewArrivals = [
         ]
     }
 ];
-/**********************************/
 export const SimilarProducts = [
     {
         id: 1,
@@ -342,7 +343,6 @@ export const products = [
     }
 ];
 
-
 export const Auth_Logo = {
     AuthLogo,
 }
@@ -365,12 +365,6 @@ export const brands = [
     brand2,
     brand1,
 ];
-
-
-
-
-
-
 
 export const ProductCategory = [
     {
@@ -602,7 +596,6 @@ export const ProductCategory = [
         ]
     }
 ];
-
 
 export const productDataCart = {
     title: "Corner sofa made of beech wood and linen fabric",

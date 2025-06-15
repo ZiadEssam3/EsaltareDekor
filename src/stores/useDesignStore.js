@@ -3,12 +3,12 @@ import { create } from "zustand";
 export const useDesignStore = create((set) => ({
     backgroundImage: JSON.parse(localStorage.getItem("backgroundImage")) || null,
     setBackgroundImage: (img) => {
-        localStorage.setItem("backgroundImage", JSON.stringify(img)); // حفظ الصورة في localStorage
+        localStorage.setItem("backgroundImage", JSON.stringify(img)); 
         set({ backgroundImage: img });
     },
 
     models: JSON.parse(localStorage.getItem("savedDesign")) || [],
-    unusedModels: JSON.parse(localStorage.getItem("unusedModels")) || [], // قائمة النماذج غير المستخدمة
+    unusedModels: JSON.parse(localStorage.getItem("unusedModels")) || [], 
 
     addModel: (model) =>
         set((state) => {
@@ -70,7 +70,7 @@ export const useDesignStore = create((set) => ({
         if (state.selectedModel !== null) {
             const modelToRemove = state.models[state.selectedModel];
             const updatedModels = state.models.filter((_, index) => index !== state.selectedModel);
-            const updatedUnusedModels = [...state.unusedModels, modelToRemove]; // نقل النموذج إلى قائمة غير المستخدمة
+            const updatedUnusedModels = [...state.unusedModels, modelToRemove]; 
 
             localStorage.setItem("savedDesign", JSON.stringify(updatedModels));
             localStorage.setItem("unusedModels", JSON.stringify(updatedUnusedModels));
@@ -84,7 +84,7 @@ export const useDesignStore = create((set) => ({
         if (state.selectedModel !== null) {
             const modelToRemove = state.models[state.selectedModel];
             const updatedModels = state.models.filter((_, index) => index !== state.selectedModel);
-            const updatedUnusedModels = [...state.unusedModels, modelToRemove]; // نقل النموذج إلى قائمة غير المستخدمة
+            const updatedUnusedModels = [...state.unusedModels, modelToRemove];
     
             localStorage.removeItem("savedDesign");
     

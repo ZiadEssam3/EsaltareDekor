@@ -22,7 +22,7 @@
     align-items: center;
     background: var(--whitecolor);
     padding: 4px 15px;
-    border-radius: 30px;
+    border-radius: 12px;
     width: 100%;
     max-width: 400px;
 }
@@ -149,11 +149,31 @@
     color: #888;
 }
 
+.search-results {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    width: 99%;
+    max-height: 193px;
+    overflow-y: auto;
+    z-index: 9;
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    top: 35px;
+    left: 1px;
+    border-radius: 0 0 15px 15px;
+}
 
+.search-results li {
+    padding: 10px;
+    cursor: pointer;
+}
 
-
-
-
+.search-results li:hover {
+    background-color: #f0f0f0;
+}
 
 
 /* Responsive Design */

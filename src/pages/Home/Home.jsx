@@ -4,7 +4,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
 import BottomNavBar from '../../components/BottomNavbar/BottomNavbar';
 import HomeSlider from '../../components/Slider/HomeSlider';
-import { Deals, Sale } from '../../assets/assets';
+import { Slider_Images, Sale } from '../../assets/assets';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Home.css';
 import Title from '../../components/Title/Title';
@@ -13,83 +13,142 @@ import SuperDeals from '../../components/SuperDeals/SuperDeals';
 import SaleCard from '../../components/SaleCard/SaleCard';
 import BrandSlider from '../../components/BrandSlider/BrandSlider';
 import ProductCard2 from '../../components/ProductCard2/ProductCard2';
-import { fetchNewArrivalsData } from '../../services/NewArrivalsService';
-import { getBrandAds } from '../../services/brandAdsService';
-import { Link } from 'react-router-dom';
-import { ClipLoader } from "react-spinners";
+import { getAdvertisedata } from '../../services/brandAdsService';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { getNewArrivalsProducts, getSuperDealsProducts, getMegaDealsProducts } from '../../services/NewArrivalsService';
+
 const Home = () => {
-    const [newArrivals, setNewArrivals] = useState([]);
+
+    const baseURL = 'http://127.0.0.1:8000';
+
     const [index, setIndex] = useState(0);
-    useEffect(() => {
-        const loadNewArrivals = async () => {
-            try {
-                const data = await fetchNewArrivalsData();
-                setNewArrivals(data);
-            } catch (error) {
-                console.error('Failed to load new arrivals', error);
-            }
-        };
-        loadNewArrivals();
-    }, []);
+
+    const [adsdata, setAdsData] = useState(null);
+
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const [superdeals, SetSuperDeals] = useState([]);
+    const [megadeals, SetMegaDeals] = useState([]);
+
+    
+
     const handleNext = () => {
-        setIndex((prev) => (prev + 1) % newArrivals.length);
+        setIndex((prev) => (prev + 1) % products.length);
     };
+
     const handlePrev = () => {
-        setIndex((prev) => (prev - 1 + newArrivals.length) % newArrivals.length);
+        setIndex((prev) => (prev - 1 + products.length) % products.length);
     };
+
     const sliderRef = useRef(null);
-    // Apply transform when index changes
+
     useEffect(() => {
         if (sliderRef.current) {
             sliderRef.current.style.transform = `translateX(-${index * 220}px)`;
         }
     }, [index]);
-    // Branding 
-    const [ads, setAds] = useState(null);
+
+    
 
     useEffect(() => {
-        getBrandAds()
-            .then(data => setAds(data))
+        getAdvertisedata()
+            .then(data => setAdsData(data))
             .catch(err => console.error(err));
     }, []);
-    if (!ads) return <LoadingSpinner />;
-    // console.log(ads.slider);
-    console.log(ads.sale);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const data = await getNewArrivalsProducts();
+                console.log("New Arrivals data:", data);
+                setProducts(data);
+            } catch (err) {
+                setError('Failed to load products');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+
+    useEffect(() => {
+        const fetchSuperDealsProducts = async () => {
+            try {
+                const data = await getSuperDealsProducts();
+                console.log("Super Deals data:", data);
+                SetSuperDeals(data);
+            } catch (err) {
+                setError('Failed to load products');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSuperDealsProducts();
+    }, []);
+
+    useEffect(() => {
+        const fetchSuperMegaProducts = async () => {
+            try {
+                const data = await getMegaDealsProducts();
+                console.log("Mega Deals data:", data);
+                SetMegaDeals(data);
+            } catch (err) {
+                setError('Failed to load products');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSuperMegaProducts();
+    }, []);
+
+    if (loading) return <LoadingSpinner />;
+    if (error) return <p className="text-danger text-center py-5">{error}</p>;
+    
     return (
         <div>
             <TopNavbar />
             <Navbar />
             <BottomNavBar />
             <div className="container py-4">
-                {/* Top row: Slider and Sale Image */}
                 <div className="row align-items-center">
                     <div className="col-md-8">
-                        <HomeSlider images={ads.slider || []} />
+                        <HomeSlider />
                     </div>
                     <div className="col-md-4">
-                        <img src={ads.sale[0].image} alt="Sale Deal" className="img-fluid rounded" />
+                        {adsdata?.[0]?.image && (
+                            <img src={`${baseURL}${adsdata[0].image}`} alt="Sale Deal" className="img-fluid rounded" />
+                            // <img src={ads.sale[0].image} alt="Sale Deal" className="img-fluid rounded" />
+                        )}
                     </div>
                 </div>
 
+
+
                 <div className="row mt-3">
-                    <div className="col-6 col-md-3">
-                        <img src={Deals.Deal1} alt="Item 1" className="img-fluid rounded" />
-                    </div>
-                    <div className="col-6 col-md-3">
-                        <img src={Deals.Deal2} alt="Item 2" className="img-fluid rounded" />
-                    </div>
-                    <div className="col-6 col-md-3 mt-3 mt-md-0">
-                        <img src={Deals.Deal3} alt="Item 3" className="img-fluid rounded" />
-                    </div>
-                    <div className="col-6 col-md-3 mt-3 mt-md-0">
-                        <img src={Deals.Deal1} alt="Item 4" className="img-fluid rounded" />
-                    </div>
+                    {adsdata.slice(1, 5).map((ad, index) => (
+                        <div key={index} className="col-6 col-md-3 mt-3 mt-md-0">
+                            <img
+                                src={`${baseURL}${ad.image}`}
+                                alt={ad.title || `Item ${index + 1}`}
+                                className="img-fluid rounded"
+                            />
+                        </div>
+                    ))}
                 </div>
+
 
                 <div className="row mt-4">
                     <div className="col">
-                        <img src={ads.banner[0].image} alt="Furniture Sale Banner" className="ED-Banner-sale rounded" />
+                        {adsdata?.[5]?.image && (
+                            <img src={`${baseURL}${adsdata[5].image}`} alt="Furniture Sale Banner" className="ED-Banner-sale rounded" />
+                        )}
+
                     </div>
                 </div>
             </div>
@@ -98,16 +157,15 @@ const Home = () => {
             <CategoryMenu />
 
             <div className='ED-Deals'>
-                <SuperDeals products={newArrivals || []} bgColor="#ff9980" cardBgColor="#ffd1d1" title='Super Deals' />
-                <SuperDeals products={newArrivals || []} bgColor="#f2ebb8" cardBgColor="#f7facd" title='Mega Deals' />
+                <SuperDeals products={superdeals || []} bgColor="#ff9980" cardBgColor="#ffd1d1" title='Super Deals' />
+                <SuperDeals products={megadeals || []} bgColor="#f2ebb8" cardBgColor="#f7facd" title='Mega Deals' />
             </div>
 
             <Title title="Basics Give Up a Set down to Rest" />
-
             <div className='ED-Sale'>
                 <SaleCard imageSrc={Sale.Sale1} discountText="Sale 20%" />
-                <SaleCard imageSrc={Sale.Sale1} discountText="Sale 40%" />
-                <SaleCard imageSrc={Sale.Sale1} discountText="Sale 50%" />
+                <SaleCard imageSrc={Sale.Sale2} discountText="Sale 40%" />
+                <SaleCard imageSrc={Sale.Sale3} discountText="Sale 50%" />
             </div>
 
             <Title title="Our Brands" />
@@ -118,23 +176,22 @@ const Home = () => {
                 <button className="nav-button prev" onClick={handlePrev}>
                     &#10094;
                 </button>
-
                 <div className="ED-product-2-slider-wrapper">
                     <div className="ED-slider" ref={sliderRef}>
-                        {newArrivals.map((product, i) => (
+                        {Array.isArray(products) && products.map((product, i) => (
                             <ProductCard2
                                 key={i}
                                 id={product.id}
-                                image={product.image}
-                                title={product.title}
-                                originalprice={product.originalPrice}
-                                discount={product.discount}
-                                slug={product.slug}
-                                rating={product.rating}
-                                category={product.category}
+                                image={`${baseURL}${product.image}`}
+                                title={product.description}
+                                originalprice={product.price}
+                                discount={product.sale}
+                                category={product.category_id}
                                 description={product.description}
+                                slug={product.id}
                             />
                         ))}
+
                     </div>
                 </div>
 

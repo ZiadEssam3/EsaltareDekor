@@ -2,7 +2,8 @@ import axios from 'axios';
 import { getCookie } from '../utils/config';
 
 const token = getCookie('token');
-const API_URL = 'https://web-production-0ba5.up.railway.app/api';
+// const API_URL = 'https://web-production-0ba5.up.railway.app/api';
+const API_URL = 'http://127.0.0.1:8000/api';
 
 export const addProduct = async (productData) => {
     if (!Array.isArray(productData.images) || productData.images.length === 0) {
@@ -21,9 +22,9 @@ export const addProduct = async (productData) => {
     formData.append('category_id', productData.category_id || '');
     formData.append('description', productData.description || '');
     formData.append('price', parseFloat(productData.price || 0));
-    formData.append('subcategory_id', productData.subcategory_id || ''); 
+    formData.append('subcategory_id', productData.subcategory_id || '');
     formData.append('num_in_stock', parseInt(productData.num_in_stock || 0));
-    
+
     productData.images.forEach((img) => {
         formData.append('images[]', img);
     });

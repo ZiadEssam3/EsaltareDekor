@@ -5,7 +5,7 @@ import { brands } from '../../assets/assets';
 const BrandSlider = () => {
     const sliderRef = useRef(null);
     const position = useRef(0);
-    const speed = 1; // pixels per frame
+    const speed = 1;        // pixels per frame
     const itemWidth = 190; // width + margin
 
     useEffect(() => {

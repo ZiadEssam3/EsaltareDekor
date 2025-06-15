@@ -10,7 +10,7 @@ const CategoryMenu = ({ onCategorySelect }) => {
                 <div
                     key={index}
                     className="ED-category-item"
-                    onClick={() => onCategorySelect(category.title)} // Call the function when a category is clicked
+                    onClick={() => onCategorySelect(category.title)} 
                 >
                     <div className="ED-category-image">
                         <Link to={`/categories`}>

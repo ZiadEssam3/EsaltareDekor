@@ -13,21 +13,20 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        // Add product to cart or update its quantity
         addToCart(state, action) {
-            const { productId, quantity } = action.payload;
+            const { productId, title, image, price, quantity } = action.payload;
             const index = state.items.findIndex(item => item.productId === productId);
-
+            const quantityNumber = parseInt(quantity); 
+        
             if (index >= 0) {
-                state.items[index].quantity += quantity;
+                state.items[index].quantity += quantityNumber;
             } else {
-                state.items.push({ productId, quantity });
+                state.items.push({ productId, title, image, price, quantity: quantityNumber });
             }
-
+        
             updateLocalStorage(state.items);
         },
 
-        // Change quantity or remove product
         changeQuantity(state, action) {
             const { productId, quantity } = action.payload;
             const index = state.items.findIndex(item => item.productId === productId);
@@ -41,14 +40,13 @@ const cartSlice = createSlice({
             updateLocalStorage(state.items);
         },
 
-        // Toggle visibility of cart tab
         toggleStatusTab(state) {
             state.statusTab = !state.statusTab;
         },
 
-        // Load cart from localStorage on first load
         setCartFromStorage(state, action) {
             state.items = action.payload || [];
+            updateLocalStorage(state.items);
         }
     }
 });

@@ -1,7 +1,7 @@
 import React from "react";
 import "./VendorPackage.css";
 
-function PackageCard({ title, tier, price, features, buttonColor }) {
+function PackageCard({ title, tier, price, features, buttonColor, onSubscribe }) {
     return (
         <div className="package-card">
             <div className="package-header">
@@ -18,7 +18,13 @@ function PackageCard({ title, tier, price, features, buttonColor }) {
                 ))}
             </ul>
 
-            <button className="package-button" style={{ backgroundColor: buttonColor }}>BUY NOW</button>
+            <button
+                className="package-button"
+                style={{ backgroundColor: buttonColor }}
+                onClick={onSubscribe}
+            >
+                BUY NOW
+            </button>
         </div>
     );
 }

@@ -7,18 +7,18 @@ import { getDiscountCode } from '../../stores/discountSlice';
 
 const TopNavbar = () => {
     const dispatch = useDispatch();
-    const { code, percentage } = useSelector((state) => state.discount);
+    const { title, percentage } = useSelector((state) => state.discount);
+
 
     useEffect(() => {
         dispatch(getDiscountCode());
     }, [dispatch]);
-
     return (
         <>
             <div className='topnavbar'>
                 <div className='topnavbar-content'>
                     <p className='topnavbar-content-para'>
-                        Sale Up To {percentage}% Use The code <span className='topnavbar-code'>{code}</span> for Sale {" "}
+                        Sale Up To {percentage}% Use The code <span className='topnavbar-code'>{title}</span> for Sale {" "}
                         <TbCirclePercentageFilled className='topnavbar-percentage-icon' size={13} />
                     </p>
                 </div>

@@ -1,6 +1,6 @@
 .vendor-dashboard {
     font-family: 'Arial', sans-serif;
-    max-width: 800px;
+    max-width: 930px;
     margin: 0 auto;
     padding: 20px;
     color: #333;
@@ -102,4 +102,11 @@
 
 .vendor-console-package {
     color: var(--secondarycolor);
+}
+
+.error-message {
+    text-align: center;
+    color: red;
+    margin-top: 50px;
+    font-size: 20px;
 }

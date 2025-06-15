@@ -1,32 +1,42 @@
+import Cookies from 'js-cookie';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // Ensure this key is set in your .env file
+const API_URL = "http://127.0.0.1:8000/api/gemini-response";
 
-const getAIResponse = async (prompt) => {
-  const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${API_KEY}`;
-
-  const requestBody = {
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
-  };
-
+export const getAIResponse = async (message) => {
   try {
-    const response = await fetch(apiUrl, {
+    const token = Cookies.get('token'); 
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+
+    const response = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}` 
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify({ message }),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP Error! Status: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || 
+        `HTTP error! status: ${response.status}`
+      );
     }
 
     const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "لا يوجد رد من Gemini.";
+
+    // Accept either string replies or product arrays
+    if (typeof data.reply === "string" || Array.isArray(data.reply)) {
+      return data.reply;
+    }
+    
+    throw new Error("Invalid response format");
   } catch (error) {
-    console.error("❌ خطأ أثناء الاتصال بـ Gemini:", error);
-    return "حدث خطأ أثناء الاتصال بـ Gemini!";
+    console.error("API Error:", error.message);
+    return "Sorry, I couldn't connect to the service. Please try again later.";
   }
 };
-
-export { getAIResponse };

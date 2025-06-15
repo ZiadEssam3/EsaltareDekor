@@ -72,10 +72,10 @@ const CustomizerPanel = () => {
                         </div>
                     </div>
 
-                    <button className="model-save-button" onClick={handleSaveSettings}>💾 Save Settings</button>
+                    <button className="model-save-button" onClick={handleSaveSettings}>Save Settings</button>
                     <button onClick={() => useDesignStore.getState().removeAndReAddModel()}>Delete and Add Model</button>
                     <button onClick={() => useDesignStore.getState().removeModel()}>
-                        ❌ Move to Unused List
+                         Move to Unused List
                     </button>
                 </>
             ) : (

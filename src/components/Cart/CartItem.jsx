@@ -1,75 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { NewArrivals } from '../../assets/assets';
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { changeQuantity } from '../../stores/cart';
-import './CartItem.css';
-import { getCookie } from '../../utils/config';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { getCookie } from '../../utils/config';
+import { setCartFromStorage } from '../../stores/cart';
+import { getAllCartItems } from '../../services/NewArrivalsService';
+import './CartItem.css';
 
-const CartItem = (props) => {
-    const { productId, quantity } = props.data;
-    const [detail, setDetail] = useState(null);
+const CartItem = ({ data }) => {
+    const IMG_BASE = 'http://127.0.0.1:8000';
+    const { product, quantity } = data || {};
     const dispatch = useDispatch();
-    const token = getCookie('authToken');
+    const token = getCookie('token');
 
-    useEffect(() => {
-        const findDetail = NewArrivals.find(product => product.id === productId);
-        setDetail(findDetail);
-    }, [productId]);
+    if (!product) return null;
+
+    const refreshCart = async () => {
+        try {
+            const updatedCart = await getAllCartItems(token);
+            dispatch(setCartFromStorage(updatedCart));
+        } catch (error) {
+            console.error('Failed to refresh cart:', error);
+        }
+    };
 
     const handleMinusQuantity = async () => {
-        dispatch(changeQuantity({ productId, quantity: quantity - 1 }));
-        console.log(quantity);
         if (quantity === 1) {
             try {
-                await axios.delete(`http://web-production-0ba5.up.railway.app/api/cart/${productId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+                await axios.delete(
+                    `${IMG_BASE}/api/cart/${data.id}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
                 toast.success('Item removed from cart');
-            } catch (error) {
-                console.error('Failed to delete item from cart:', error);
+                await refreshCart();
+            } catch (err) {
+                console.error('Failed to delete item', err);
                 toast.error('Error removing item');
             }
+            return;
         }
-    };
 
-    const handlePlusQuantity = () => {
-        dispatch(changeQuantity({ productId, quantity: quantity + 1 }));
-    };
-
-    const getCartItems = async () => {
         try {
-            const response = await axios.get('http://web-production-0ba5.up.railway.app/api/cart', {
-                params: { user_id: userId },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-            console.log("Cart items:", response.data);
-        } catch (error) {
-            console.error("Failed to fetch cart items:", error);
+            await axios.put(
+                `${IMG_BASE}/api/cart/${data.id}`,
+                { quantity: String(quantity - 1) },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success('Quantity updated');
+            await refreshCart();
+        } catch (err) {
+            console.error('Failed to update quantity', err);
+            toast.error('Error updating quantity');
         }
     };
-    /*useEffect(() => {
-        if (userId && token) {
-            getCartItems();
+
+    const handlePlusQuantity = async () => {
+        const newQuantity = quantity + 1;
+
+        try {
+            await axios.put(
+                `${IMG_BASE}/api/cart/${data.id}`,
+                { quantity: String(newQuantity) },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success('Quantity updated');
+            await refreshCart();
+        } catch (err) {
+            console.error('Failed to update quantity', err);
+            toast.error('Error updating quantity');
         }
-    }, [userId, token]);*/
-    //const detail = response.data;  
-    //console.log(detail);
-    if (!detail) return null;
+    };
 
     return (
         <div className="cart-item">
-            <img src={detail.image} alt={detail.title} className="cart-item-img" />
-            <h3 className="cart-item-name">{detail.title}</h3>
-            <p className="cart-item-price">${(detail.price * quantity).toFixed(2)}</p>
+            <img
+                src={`${IMG_BASE}${product.image}`}
+                alt={product.name}
+                className="cart-item-img"
+            />
+            <h3 className="cart-item-name">{product.name}</h3>
+
+            <p className="cart-item-price">
+                ${(parseFloat(product.price) * quantity).toFixed(2)}
+            </p>
+
             <div className="cart-item-quantity">
-                <button className="quantity-btn" onClick={handleMinusQuantity}>-</button>
+                <button className="quantity-btn" onClick={handleMinusQuantity}>
+                    –
+                </button>
                 <span>{quantity}</span>
-                <button className="quantity-btn" onClick={handlePlusQuantity}>+</button>
+                <button className="quantity-btn" onClick={handlePlusQuantity}>
+                    +
+                </button>
             </div>
         </div>
     );

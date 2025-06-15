@@ -4,10 +4,10 @@ import './Error.css';
 
 const ErrorPage = () => {
     return (
-        <div className="error-page">
-            <FaExclamationTriangle className="error-icon" />
-            <h1>404 - Page Not Found</h1>
-            <p>Sorry, the page you're looking for doesn't exist.</p>
+        <div className="error-page fade-in">
+            <FaExclamationTriangle className="error-icon bounce" />
+            <h1 className="slide-down">404 - Page Not Found</h1>
+            <p className="slide-up">Sorry, the page you're looking for doesn't exist.</p>
         </div>
     );
 };

@@ -1,61 +1,64 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { clearCompare, removeFromCompare } from '../../stores/product';
+import React, { useEffect, useState } from 'react';
 import './Compare.css';
 import TopNavbar from '../../components/TopNavbar/TopNavbar';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
-import { FaStar } from 'react-icons/fa';
 import BottomNavBar from '../../components/BottomNavbar/BottomNavbar';
-import { getCookie } from '../../utils/config';
+import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
+import { getCookie } from '../../utils/config';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+const baseURL = 'http://127.0.0.1:8000';
 
 const ComparePage = () => {
-    const compared = useSelector((state) => state.products.compare);
-    const dispatch = useDispatch();
-    const token = getCookie('authToken');
+    const [compareData, setCompareData] = useState([]);
+
+    const token = getCookie('token');
 
     useEffect(() => {
-        const storedCompare = localStorage.getItem('compare');
-        if (storedCompare) {
-            dispatch({ type: 'products/setProducts', payload: { compare: JSON.parse(storedCompare) } });
-        }
-    }, [dispatch]);
+        const fetchCompareData = async () => {
+            try {
+                const res = await axios.get(`${baseURL}/api/compare`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setCompareData(res.data.data);
+            } catch (err) {
+                console.error('Error fetching compare data:', err);
+                toast.error('Failed to load comparison data');
+            }
+        };
 
-    const handleRemoveFromCompare = async (pId) => {
-        dispatch(removeFromCompare(pId));
-        try {
-            await axios.delete(`http://web-production-0ba5.up.railway.app/api/compare/${pId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            toast.success('Item removed from cart');
-        } catch (error) {
-            console.error('Failed to delete item from cart:', error);
-            toast.error('Error removing item');
-        }
-        // Update localStorage
-        const updatedCompare = compared.filter((product) => product.id !== pId);
-        localStorage.setItem('compare', JSON.stringify(updatedCompare));
-    };
+        fetchCompareData();
+    }, [token]);
 
     const handleClearCompare = async () => {
-        dispatch(clearCompare());
-        localStorage.removeItem('compare');
         try {
-            await axios.delete(`http://web-production-0ba5.up.railway.app/api/compare`, {
+            await axios.delete(`${baseURL}/api/compare`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            toast.success('Item removed from cart');
-        } catch (error) {
-            console.error('Failed to delete item from cart:', error);
-            toast.error('Error removing item');
+            setCompareData([]);
+            toast.success('Comparison cleared');
+        } catch (err) {
+            console.error('Error clearing compare:', err);
+            toast.error('Failed to clear comparison');
         }
-    }
+    };
 
+    const handleRemoveItem = async (id) => {
+        try {
+            await axios.delete(`${baseURL}/api/compare/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setCompareData(prev => prev.filter(item => item.id !== id));
+            toast.success('Item removed');
+        } catch (err) {
+            console.error('Error removing item:', err);
+            toast.error('Failed to remove item');
+        }
+    };
 
-    if (compared.length === 0) {
+    if (compareData.length === 0) {
         return (
             <>
                 <TopNavbar />
@@ -69,11 +72,14 @@ const ComparePage = () => {
 
     const attributes = [
         { key: 'image', label: 'Image' },
-        { key: 'title', label: 'Product Name' },
-        { key: 'originalPrice', label: 'Price' },
-        { key: 'rating', label: 'Rating' },
-        { key: 'category', label: 'Category' },
+        { key: 'name', label: 'Product Name' },
+        { key: 'price', label: 'Price' },
         { key: 'description', label: 'Description' },
+        { key: 'width', label: 'Width' },
+        { key: 'height', label: 'Height' },
+        { key: 'length', label: 'Length' },
+        { key: 'num_in_stock', label: 'Stock' },
+        { key: 'sale', label: 'Discount (%)' },
     ];
 
     return (
@@ -84,30 +90,23 @@ const ComparePage = () => {
             <div className="compare-wrapper">
                 <div className="compare-header">
                     <h2>Compare Products</h2>
-                    <button className="btn-clear" onClick={handleClearCompare}>
-                        Clear All
-                    </button>
+                    <button className="btn-clear" onClick={handleClearCompare}>Clear All</button>
                 </div>
 
                 <div className="compare-table">
-                    {attributes.map((attr) => (
+                    {attributes.map(attr => (
                         <div className="compare-row" key={attr.key}>
                             <div className="compare-attribute">{attr.label}</div>
-                            {compared.map((product) => (
-                                <div className="compare-value" key={product.id}>
+                            {compareData.map(item => (
+                                <div className="compare-value" key={item.id}>
                                     {attr.key === 'image' ? (
-                                        <img src={product.image} alt={product.title} className="compare-img" />
-                                    ) : attr.key === 'originalPrice' ? (
-                                        `$${product.originalPrice}`
-                                    ) : attr.key === 'rating' ? (
-                                        <>
-                                            <span>{product.rating ?? 'N/A'} </span>
-                                            {[...Array(Math.floor(product.rating || 0))].map((_, index) => (
-                                                <FaStar key={index} style={{ color: 'gold', marginRight: '5px' }} />
-                                            ))}
-                                        </>
+                                        <img
+                                            src={`${baseURL}${item.product.image}`}
+                                            alt={item.product.name}
+                                            className="compare-img"
+                                        />
                                     ) : (
-                                        product[attr.key] ?? 'N/A'
+                                        item.product[attr.key] ?? 'N/A'
                                     )}
                                 </div>
                             ))}
@@ -116,14 +115,10 @@ const ComparePage = () => {
 
                     <div className="compare-row">
                         <div className="compare-attribute">Action</div>
-                        {compared.map((product) => (
-                            <div className="compare-value" key={product.id}>
-                                <button className="btn-remove" onClick={() => handleRemoveFromCompare(product.id)}>
-                                    Remove
-                                </button>
-                                <a href={`/product/${product.slug}`} className="btn-view">
-                                    View
-                                </a>
+                        {compareData.map(item => (
+                            <div className="compare-value" key={item.id}>
+                                <button className="btn-remove" onClick={() => handleRemoveItem(item.id)}>Remove</button>
+                                <a href={`/product/${item.product.id}`} className="btn-view">View</a>
                             </div>
                         ))}
                     </div>
@@ -135,4 +130,3 @@ const ComparePage = () => {
 };
 
 export default ComparePage;
-

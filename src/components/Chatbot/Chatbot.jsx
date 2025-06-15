@@ -5,11 +5,15 @@ import { getAIResponse } from "./ChatbotAPI";
 import { motion, AnimatePresence } from "framer-motion";
 import debounce from "lodash.debounce";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import './ChatInterface.css';
+import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 const ChatInterface = () => {
-  const [messages, setMessages] = useState(() => JSON.parse(localStorage.getItem("chatMessages")) || [
-    { sender: "bot", text: "Hello! How can I assist you today?" }
-  ]);
+  const [messages, setMessages] = useState(() =>
+    JSON.parse(localStorage.getItem("chatMessages")) || [
+      { sender: "bot", text: "Hello! How can I assist you today?" }
+    ]
+  );
+  const token = Cookies.get('token');
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
@@ -33,28 +37,94 @@ const ChatInterface = () => {
     }
   }, [isOpen]);
 
+  const renderMessageContent = (content) => {
+  // Handle product array responses
+  if (Array.isArray(content)) {
+    return (
+      <div className="products-container">
+        <p>Here are some products you might like:</p>
+        <div className="product-grid">
+          {content.map((product, index) => {
+            const productId = product.url.split('/').pop();
+            return (
+              <div key={index} className="product-card">
+                <div className="product-name">{product.name}</div>
+                <div className="product-price">Price: {product.price}</div>
+                <Link to={`/product/${productId}`} className="product-view-btn">
+                  View
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+  
+  // Handle add-to-cart responses (object with message)
+  if (typeof content === 'object' && content.message) {
+    const productId = content.url?.split('/').pop();
+    return (
+      <div className="add-to-cart-response">
+        <div className="success-message">{content.message}</div>
+        {content.name && (
+          <div className="product-info">
+            <div className="product-name">{content.name}</div>
+            <div className="product-price">Price: {content.price}</div>
+            {productId && (
+              <Link to={`/product/${productId}`} className="product-view-btn">
+                View Product
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+  
+  // Default text response
+  return <p>{content}</p>;
+};
+
   const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
   };
 
-  const handleSendMessage = useCallback(debounce(async () => {
-    if (!input.trim()) return;
-    const userMessage = { sender: "user", text: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setIsTyping(true);
+  const handleSendMessage = useCallback(
+    debounce(async () => {
+      if (!input.trim()) return;
 
-    try {
-      const aiResponse = await getAIResponse(input);
-      setMessages((prev) => [...prev, { sender: "bot", text: aiResponse }]);
-    } catch (error) {
-      setMessages((prev) => [...prev, { sender: "bot", text: "Sorry, I couldn't fetch a response." }]);
-    } finally {
-      setIsTyping(false);
-    }
-  }, 300), [input]);
+      const userMessage = { sender: "user", text: input };
+      setMessages((prev) => [...prev, userMessage]);
+      setInput("");
+      setIsTyping(true);
+
+      try {
+        const aiResponse = await getAIResponse(input);
+        setMessages((prev) => [...prev, {
+          sender: "bot",
+          text: aiResponse || "I didn't get a response. Please try again."
+        }]);
+      } catch (error) {
+        console.error("API Error:", error);
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: "bot",
+            text: error.message.includes("401") || error.message.includes("No authentication")
+              ? "Your session has expired. Please refresh the page to continue."
+              : "Sorry, I'm having trouble connecting. Please try again later."
+          }
+        ]);
+      } finally {
+        setIsTyping(false);
+      }
+    }, 300),
+    [input]
+  );
 
   const handleQuickReply = (text) => {
     setInput(text);
@@ -66,23 +136,29 @@ const ChatInterface = () => {
     localStorage.removeItem("chatMessages");
   };
 
-  const chatBubbles = useMemo(() => (
-    messages.map((msg, index) => (
-      <motion.div
-        key={index}
-        className={`d-flex align-items-start mb-3 ${msg.sender === "user" ? "justify-content-end" : ""}`}
-        initial={{ opacity: 0, x: msg.sender === "user" ? 50 : -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {msg.sender === "bot" && <i className="fas fa-robot chat-bot-icon me-2"></i>}
-        <div className={`p-3 rounded ${msg.sender === "user" ? "chat-bubble-user" : "chat-bubble-bot"}`}>
-          <p className="mb-0 rounded-5">{msg.text}</p>
-        </div>
-        {msg.sender === "user" && <i className="fas fa-user chat-user-icon ms-2"></i>}
-      </motion.div>
-    ))
-  ), [messages]);
+  const chatBubbles = useMemo(
+    () =>
+      messages.map((msg, index) => (
+        <motion.div
+          key={index}
+          className={`d-flex align-items-start mb-3 ${msg.sender === "user" ? "justify-content-end" : ""
+            }`}
+          initial={{ opacity: 0, x: msg.sender === "user" ? 50 : -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {msg.sender === "bot" && <i className="fas fa-robot chat-bot-icon me-2"></i>}
+          <div
+            className={`p-3 rounded ${msg.sender === "user" ? "chat-bubble-user" : "chat-bubble-bot"
+              }`}
+          >
+            {renderMessageContent(msg.text)}
+          </div>
+          {msg.sender === "user" && <i className="fas fa-user chat-user-icon ms-2"></i>}
+        </motion.div>
+      )),
+    [messages]
+  );
 
   return (
     <div>
@@ -112,10 +188,15 @@ const ChatInterface = () => {
             <div className="mb-3 d-flex align-items-center justify-content-between">
               <h5 className="mb-0">Chat</h5>
               <div className="d-flex justify-content-end align-items-center">
-                <button className="btn btn-warning btn-sm me-2" onClick={handleClearChat}><i className="fas fa-trash"></i></button>
-                <button className="btn btn-danger btn-sm" onClick={() => setIsOpen(false)}><i className="fas fa-times"></i></button>
+                <button className="btn btn-warning btn-sm me-2" onClick={handleClearChat}>
+                  <i className="fas fa-trash"></i>
+                </button>
+                <button className="btn btn-danger btn-sm" onClick={() => setIsOpen(false)}>
+                  <i className="fas fa-times"></i>
+                </button>
               </div>
             </div>
+
             <div className="flex-grow-1 overflow-auto mb-3">
               {chatBubbles}
               {isTyping && <p className="text-muted">Bot is typing...</p>}
@@ -131,10 +212,7 @@ const ChatInterface = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
               />
-              <button
-                className="btn ms-2 chat-send-btn"
-                onClick={handleSendMessage}
-              >
+              <button className="btn ms-2 chat-send-btn" onClick={handleSendMessage}>
                 <i className="fas fa-paper-plane"></i>
               </button>
             </div>
@@ -156,5 +234,4 @@ const ChatInterface = () => {
     </div>
   );
 };
-
 export default ChatInterface;
