@@ -144,7 +144,6 @@ const Product = () => {
                 image: productData.product.image,
                 price: Math.round(productData.product.price - (productData.product.price * (productData.product.sale || 0) / 100))
             }));
-
             await axios.post(`${baseURL}/api/favourites`, {
                 product_id: productData.product.id
             }, {
@@ -178,7 +177,7 @@ const Product = () => {
             const response = await axios.post(`${baseURL}/api/user/add-review`, {
                 product_id: productData.product.id,
                 title: comment,
-                rate: reviewRating // ✅ Changed from 'rating' to 'rate'
+                rate: reviewRating
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -262,8 +261,8 @@ const Product = () => {
                     <h2>{product.name}</h2>
                     {product && (
                         <div className="rating">
-                            {renderStars(Math.round(product.rating || 0))}
-                            <span>{product.rating || 0} ({ratingsCount} ratings)</span>
+                            {renderStars(Math.round(productData.average_rating || 0))}
+                            <span>{productData.average_rating || 0} ({productData.number_of_reviews} ratings)</span>
                         </div>
                     )}
                     <button className="production-badge">Produced on demand</button>
@@ -318,7 +317,8 @@ const Product = () => {
                             </div>
                         ))}
                     </div>
-                    {console.log('productdata', productData)}
+                    {console.log('productdata', productData.average_rating)}
+
                     <div className="review-section">
                         <h3 className="review-title">Highest Rated Reviews</h3>
                         {productData.reviews.length > 0 ? (

@@ -38,53 +38,58 @@ const ChatInterface = () => {
   }, [isOpen]);
 
   const renderMessageContent = (content) => {
-  // Handle product array responses
-  if (Array.isArray(content)) {
-    return (
-      <div className="products-container">
-        <p>Here are some products you might like:</p>
-        <div className="product-grid">
-          {content.map((product, index) => {
-            const productId = product.url.split('/').pop();
-            return (
-              <div key={index} className="product-card">
-                <div className="product-name">{product.name}</div>
-                <div className="product-price">Price: {product.price}</div>
-                <Link to={`/product/${productId}`} className="product-view-btn">
-                  View
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-  
-  // Handle add-to-cart responses (object with message)
-  if (typeof content === 'object' && content.message) {
-    const productId = content.url?.split('/').pop();
-    return (
-      <div className="add-to-cart-response">
-        <div className="success-message">{content.message}</div>
-        {content.name && (
-          <div className="product-info">
-            <div className="product-name">{content.name}</div>
-            <div className="product-price">Price: {content.price}</div>
-            {productId && (
-              <Link to={`/product/${productId}`} className="product-view-btn">
-                View Product
-              </Link>
-            )}
+    // Handle product array responses
+    if (Array.isArray(content)) {
+      console.log(content[0].message)
+      return (
+        <div className="products-container">
+          {/* <p>Here are some products you might like:</p> */}
+          <p>{content[0].message}</p>
+          <div className="product-grid">
+            {content.map((product, index) => {
+              const productId = product.url.split('/').pop();
+              return (
+                <div key={index} className="product-card">
+                  <div className="product-name">{product.name}</div>
+                  <div className="product-price">Price: {product.price}</div>
+                  <Link to={`/product/${productId}`} className="product-view-btn">
+                    View
+                  </Link>
+                </div>
+              );
+            })}
           </div>
-        )}
-      </div>
-    );
-  }
-  
-  // Default text response
-  return <p>{content}</p>;
-};
+        </div>
+      );
+    }
+
+    // Handle add-to-cart responses (object with message)
+    if (typeof content === 'object' && content.message) {
+      const productId = content.url?.split('/').pop();
+      const cleanMessage = content.message.replace(/\u2714\uFE0F\s*/g, ''); // remove check mark
+    
+      return (
+        <div className="add-to-cart-response">
+          <div className="success-message">{cleanMessage}</div>
+          {content.name && (
+            <div className="product-info">
+              <div className="product-name">{content.name}</div>
+              <div className="product-price">Price: {content.price}</div>
+              {productId && (
+                <Link to={`/product/${productId}`} className="product-view-btn">
+                  View Product
+                </Link>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    }
+    
+
+    // Default text response
+    return <p>{content}</p>;
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -108,6 +113,7 @@ const ChatInterface = () => {
           sender: "bot",
           text: aiResponse || "I didn't get a response. Please try again."
         }]);
+        console.log('ziad', input);
       } catch (error) {
         console.error("API Error:", error);
         setMessages((prev) => [

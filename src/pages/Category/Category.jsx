@@ -18,28 +18,23 @@ const Category = () => {
   const [categories, setCategories] = useState([]);
   const productsPerPage = 6;
 
-  const getDiscount = (original, current) => {
-    const discount = ((original - current) / original) * 100;
-    return Math.round(discount);
-  };
-
   useEffect(() => {
-    axios.get(`${baseURL}api/esaltare/products/filter`)
-      .then(response => {
-        setProducts(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching products:', error);
-      });
-
-    axios.get(`${baseURL}api/esaltare/categories`)
-      .then(response => {
-        setCategories(response.data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching categories:', error);
-      });
+    const fetchData = async () => {
+      try {
+        const [productsRes, categoriesRes] = await Promise.all([
+          axios.get(`${baseURL}api/esaltare/products/filter`),
+          axios.get(`${baseURL}api/esaltare/categories`)
+        ]);
+        setProducts(productsRes.data);
+        setCategories(categoriesRes.data.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
   }, []);
+  
 
   // mapping category_id -> category name
   const productsWithCategoryName = useMemo(() => {
@@ -72,9 +67,13 @@ const Category = () => {
   };
 
   const handleCategorySelect = (categoryName) => {
+    console.log('Selected Category:', categoryName);
     setSelectedCategory(categoryName);
     setCurrentPage(1);
   };
+  
+  console.log('my categories:', categories)
+  console.log('Product with Category Name:', productsWithCategoryName);
 
   return (
     <div>
@@ -92,11 +91,11 @@ const Category = () => {
               key={i}
               id={product.id}
               image={`${baseURL}storage/${product.image}`}
-              title={product.description}
+              title={product.name}
               originalprice={product.price}
               discount={product.sale}
               category={product.categoryName}
-              description={product.description}
+              description={product.description.replace(/<[^>]+>/g,'')}
               slug={product.id}
             />
           ))

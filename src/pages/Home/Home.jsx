@@ -183,11 +183,11 @@ const Home = () => {
                                 key={i}
                                 id={product.id}
                                 image={`${baseURL}${product.image}`}
-                                title={product.description}
+                                title={product.name}
                                 originalprice={product.price}
                                 discount={product.sale}
                                 category={product.category_id}
-                                description={product.description}
+                                description={product.description.replace(/<[^>]+>/g,'')}
                                 slug={product.id}
                             />
                         ))}

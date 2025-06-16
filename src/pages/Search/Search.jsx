@@ -206,12 +206,12 @@ const Search = () => {
                                 key={product.id}
                                 id={product.id}
                                 image={`${baseURL}storage/${product.image}`}
-                                title={product.description}
+                                title={product.name}
                                 originalprice={product.price}
                                 discount={product.sale}
                                 category={product.category_id}
                                 slug={product.id}
-                                description={product.description}
+                                description={product.description.replace(/<[^>]+>/g,'')}
                             />
                         ))
                     )}

@@ -4,7 +4,7 @@ const API_URL = "http://127.0.0.1:8000/api/gemini-response";
 
 export const getAIResponse = async (message) => {
   try {
-    const token = Cookies.get('token'); 
+    const token = Cookies.get('token');
     if (!token) {
       throw new Error("No authentication token found");
     }
@@ -14,7 +14,7 @@ export const getAIResponse = async (message) => {
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": `Bearer ${token}` 
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({ message }),
     });
@@ -22,7 +22,7 @@ export const getAIResponse = async (message) => {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
-        errorData.message || 
+        errorData.message ||
         `HTTP error! status: ${response.status}`
       );
     }
@@ -31,9 +31,10 @@ export const getAIResponse = async (message) => {
 
     // Accept either string replies or product arrays
     if (typeof data.reply === "string" || Array.isArray(data.reply)) {
+      console.log('this is res:', data.reply[0].message);
       return data.reply;
     }
-    
+
     throw new Error("Invalid response format");
   } catch (error) {
     console.error("API Error:", error.message);
