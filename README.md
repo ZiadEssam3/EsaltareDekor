@@ -7,9 +7,9 @@ The platform also integrates AI features such as a smart chatbot and personalize
 ## 📸 Project Preview  
 Below are some screenshots from the project (stored in the `assets` folder):
 
-![Home](./assets/1.png)  
-![Product](./assets/2.png) 
-![Dashboard](./assets/3.png)
+![1](./assets/1.png)  
+![2](./assets/2.png) 
+![3](./assets/3.png)
 
 ---
 
