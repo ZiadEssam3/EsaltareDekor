@@ -66,12 +66,13 @@ It offers:
 
 ---
 
-## 🚀 Main Features  
+## 🚀 Main Features 
+
 ### 👤 User Features  
 - Browse furniture categories  
 - Product comparison  
 - Add to favorites  
-- Add to cart  
+- Add to Cart  
 - Checkout & secure payment  
 - Track order location  
 - View similar products  
