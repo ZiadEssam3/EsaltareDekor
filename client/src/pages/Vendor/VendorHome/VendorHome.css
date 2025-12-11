@@ -1,0 +1,51 @@
+.Vendor-package-display {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 38px;
+    margin-bottom: 55px;
+}
+
+.ED-Vendor-console-logo {
+    text-align: center;
+}
+
+.ED-Vendor-console-logo img {
+    width: 465px;
+    margin: 30px 0px;
+}
+
+.ED-Vendor-console-title {
+    font-size: 26px;
+    text-align: center;
+}
+
+@media (max-width:768px) {
+    .Vendor-package-display {
+        padding: 27px;
+    }
+}
+
+@media (max-width:488px) {
+    .Vendor-package-display {
+        display: block;
+        padding: 35px;
+    }
+
+    .account span {
+        font-size: 10px;
+    }
+
+    .ED-Vendor-console-logo img {
+        width: 286px;
+    }
+
+    .Vendor-package-display {
+        padding: 22px;
+    }
+
+    .package-card {
+        margin-bottom: 10px;
+    }
+
+}

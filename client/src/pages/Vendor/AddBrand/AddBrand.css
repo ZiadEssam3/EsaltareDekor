@@ -1,0 +1,58 @@
+.brand-form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.brand-form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.brand-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.brand-form label {
+    font-weight: 600;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-form input,
+.brand-form textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-top: 5px;
+    transition: border 0.3s ease;
+}
+
+.brand-form input:focus,
+.brand-form textarea:focus {
+    border-color: #596b56;
+    outline: none;
+}
+
+.brand-form button {
+    padding: 12px 20px;
+    background-color: #596b56;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.brand-form button:hover {
+    background-color: #80977c;
+}

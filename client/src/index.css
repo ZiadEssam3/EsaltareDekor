@@ -1,0 +1,32 @@
+/* add css for all html elements [for the ED Project] */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Arabic:wght@100..900&display=swap');
+:root {
+  --firstcolor: #7b0606;
+  --whitecolor: #fff;
+  --goldcolor: #fecd29;
+  --graycolor: #8c8c8c;
+  --blackcolor: #000;
+  --maincolor: #f5f8cd;
+  --secondarycolor: #596b56;
+  --thirdarycolor: #e8edda;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Noto Sans Arabic", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.bottom-distance {
+  margin-bottom: 20px;
+}
